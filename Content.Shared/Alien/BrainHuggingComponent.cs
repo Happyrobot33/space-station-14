@@ -63,46 +63,29 @@ public sealed class BrainHuggingComponent : Component
     [ViewVariables(VVAccess.ReadWrite), DataField("soundBrainSlugJump")]
     public SoundSpecifier? SoundBrainSlugJump = new SoundPathSpecifier("/Audio/Animals/brainslug_scream.ogg");
 
+    [DataField("actionBrainSlugJump")]
+    public ProtoId<EntityPrototype> ActionBrainSlugJump = "ActionBrainSlugJump"; // jump
 
+    [DataField("actionBrainSlug")]
+    public ProtoId<EntityPrototype> BrainSlugAction = "ActionBrainSlug"; // infest
 
+    [DataField("actionDominateVictim")]
+    public ProtoId<EntityPrototype> DominateVictimAction = "ActionDominateVictim"; // stun
 
-    [DataField("brainSlugJumpActionId", customTypeSerializer: typeof(PrototypeIdSerializer<EntityTargetActionPrototype>))] // jump
-    public string ActionBrainSlugJumpId = "BrainSlugJump";
+    [DataField("actionTormentHostSlug")]
+    public ProtoId<EntityPrototype> TormentHostSlugAction = "ActionTormentHostSlug"; // torment
 
-    [DataField("brainSlugActionId", customTypeSerializer: typeof(PrototypeIdSerializer<EntityTargetActionPrototype>))] // infest
-    public string BrainSlugActionId = "BrainSlug";
+    [DataField("actionAssumeControlSlug")]
+    public ProtoId<EntityPrototype> AssumeControlAction = "ActionAssumeControlSlug"; // assume control
 
-    [DataField("dominateVictimActionId", customTypeSerializer: typeof(PrototypeIdSerializer<EntityTargetActionPrototype>))] // stun
-    public string DominateVictimActionId = "DominateVictim";
+    [DataField("actionReproduceSlug")]
+    public ProtoId<EntityPrototype> ReproduceAction = "ActionReproduceSlug"; // reproduce
 
-    [DataField("releaseSlugActionId", customTypeSerializer: typeof(PrototypeIdSerializer<EntityTargetActionPrototype>))] // release
-    public string ReleaseSlugActionId = "ReleaseSlug";
+    [DataField("actionReleaseSlug")]
+    public ProtoId<EntityPrototype> ReleaseSlugAction = "ActionReleaseSlug"; // release
 
-
-
-    [DataField("actionBrainSlugJump", required: true)] // 
-    public WorldTargetAction ActionBrainSlugJump = new(); // jump
-
-    [DataField("brainSlugAction", required: true)]
-    public EntityTargetAction? BrainSlugAction; // infest
-
-    [DataField("dominateVictimAction", required: true)]
-    public EntityTargetAction? DominateVictimAction; // stun
-
-    [DataField("tormentHostSlugAction", required: true)]
-    public EntityTargetAction? TormentHostSlugAction; // torment
-
-    [DataField("assumeControlSlugAction", required: true)]
-    public EntityTargetAction? AssumeControlAction; // assume control
-
-    [DataField("reproduceSlugAction", required: true)]
-    public EntityTargetAction? ReproduceAction; // reproduce
-
-    [DataField("releaseSlugAction", required: true)]
-    public EntityTargetAction? ReleaseSlugAction; // release
-
-    [DataField("storeSlugAction", required: true)]
-    public EntityTargetAction? StoreSlugAction; // ui store
+    [DataField("actionStoreSlug")]
+    public ProtoId<EntityPrototype> StoreSlugAction = "ActionStoreSlug"; // ui store
 
 
 

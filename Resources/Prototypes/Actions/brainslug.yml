@@ -1,0 +1,32 @@
+- type: entity
+  id: ActionBrainSlugJump
+  name: Jump
+  description: "Brain slug jump."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: WorldTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_jump
+    event:
+      !type:BrainSlugJumpActionEvent
+    useDelay: 2
+    range: 160
+    priority: -10
+    
+- type: entity
+  id: ActionBrainSlug
+  name: Infest
+  description: "Brain slug infest."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_infest.png
+    event:
+      !type:BrainSlugActionEvent
+    useDelay: 2
+    priority: -11

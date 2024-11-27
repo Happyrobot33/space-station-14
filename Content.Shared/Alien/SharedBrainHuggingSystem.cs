@@ -1,6 +1,7 @@
 using Content.Shared.DoAfter;
 using Content.Shared.Actions;
 using Robust.Shared.Serialization;
+using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared.Alien;
 
