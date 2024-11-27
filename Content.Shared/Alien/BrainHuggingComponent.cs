@@ -1,4 +1,4 @@
-using Content.Shared.Actions.ActionTypes;
+using Content.Shared.Actions;
 using Content.Shared.Alien;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
