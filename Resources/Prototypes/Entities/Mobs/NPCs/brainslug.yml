@@ -1,0 +1,136 @@
+- type: entity
+  parent: SimpleMobBase
+  name: brain slug
+  id: MobBrainSlug
+  suffix: qweqwe
+  components:
+    - type: CollectiveMind
+      channel: Slug
+      channelColor: "#8a0303"
+    - type: BrainSlug ## first
+    - type: BrainHugging ## second
+      paralyzeTime: 3
+      chansePounce: 100
+      actionBrainSlugJump:
+        icon: Interface/Actions/brainslug.rsi/borer_jump.png
+        name: jump
+        description: jump desc
+        range: 160
+        priority: -10
+        useDelay: 2
+        event: !type:BrainSlugJumpActionEvent # jump
+      brainSlugAction:
+        icon: Interface/Actions/brainslug.rsi/borer_infest.png
+        name: infest
+        description: infest desc
+        priority: -11
+        useDelay: 2
+        event: !type:BrainSlugActionEvent #infest
+      dominateVictimAction:
+        icon: Interface/Actions/brainslug.rsi/borer_dominate.png
+        name: stun
+        description: stun desc
+        priority: -12
+        useDelay: 2
+        event: !type:DominateVictimActionEvent #stun
+      tormentHostSlugAction:
+        icon: Interface/Actions/brainslug.rsi/borer_torment.png
+        name: Torment
+        description: Torment desc
+        priority: -13
+        useDelay: 2
+        event: !type:TormentHostActionEvent # torment
+      assumeControlSlugAction:
+        icon: Interface/Actions/brainslug.rsi/borer_brain.png
+        name: assume
+        description: assume desc
+        priority: -14
+        useDelay: 2
+        event: !type:AssumeControlActionEvent # assume control
+      reproduceSlugAction:
+        icon: Interface/Actions/brainslug.rsi/borer_reproduce.png
+        name: reproduce
+        description: reproduce desc
+        priority: -15
+        useDelay: 2
+        event: !type:ReproduceActionEvent # reproduce
+      releaseSlugAction:
+        icon: Interface/Actions/brainslug.rsi/borer_outfest.png
+        name: release
+        description: release desc
+        priority: -20
+        useDelay: 2
+        event: !type:ReleaseSlugActionEvent # release
+    - type: Sprite
+      sprite: Mobs/Aliens/brainslug.rsi
+      drawdepth: SmallMobs
+      noRot: true
+      layers:
+        - map: [ "enum.DamageStateVisualLayers.Base" ]
+          state: alive
+    - type: DamageStateVisuals
+      states:
+        Alive:
+          Base: alive
+        Dead:
+          Base: dead
+    # - type: Vocal
+    #   sounds:
+    #     Unsexed: BrainSlugEmote
+    - type: Item
+    - type: Physics
+      bodyType: Dynamic
+    - type: Fixtures
+      fixtures:
+        fix1:
+          shape:
+            !type:PhysShapeCircle
+            radius: 0.2
+          density: 100
+          mask:
+            - SmallMobMask
+          layer:
+            - SmallMobLayer
+    - type: Speech
+    - type: Bloodstream
+      bloodMaxVolume: 10
+      bloodReagent: Blood
+    - type: GhostRole
+      allowMovement: true
+      allowSpeech: true
+      makeSentient: true
+      name: brainslug
+      description: brainslug
+      rules: brainslug
+    - type: GhostTakeoverAvailable
+    - type: MeleeWeapon
+      hidden: true
+      soundHit:
+        path: /Audio/Effects/bite.ogg
+      angle: 0
+      animation: WeaponArcBite
+      damage:
+        types:
+          Piercing: 2
+    - type: MobThresholds
+      thresholds:
+        0: Alive
+        25: Dead
+    - type: MovementSpeedModifier
+      baseWalkSpeed: 3
+      baseSprintSpeed: 4
+    - type: Tag
+      tags:
+        - CannotSuicide
+    - type: NoSlip
+    # - type: TypingIndicator
+    #   proto: slug
+
+- type: instantAction
+  id: ReleaseControlAction
+  icon: Interface/Actions/brainslug.rsi/borer_brain_out.png
+  name: Release
+  description: Release
+  serverEvent: !type:ReleaseControlActionEvent
+  useDelay: 2
+  priority: -19
