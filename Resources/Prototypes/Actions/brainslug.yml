@@ -25,8 +25,88 @@
     itemIconStyle: NoItem
     icon:
       sprite: Interface/Actions/brainslug.rsi
-      state: borer_infest.png
+      state: borer_infest
     event:
       !type:BrainSlugActionEvent
     useDelay: 2
     priority: -11
+    
+- type: entity
+  id: ActionDominateVictim
+  name: Stun
+  description: "Brain slug stun."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_dominate
+    event:
+      !type:DominateVictimActionEvent
+    useDelay: 2
+    priority: -12
+    
+- type: entity
+  id: ActionTormentHostSlug
+  name: Torment
+  description: "Brain slug torment."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_torment
+    event:
+      !type:TormentHostActionEvent
+    useDelay: 2
+    priority: -13
+    
+- type: entity
+  id: ActionAssumeControlSlug
+  name: Assume
+  description: "Brain slug assume."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_brain
+    event:
+      !type:AssumeControlActionEvent
+    useDelay: 2
+    priority: -14
+    
+- type: entity
+  id: ActionReproduceSlug
+  name: Reproduce
+  description: "Brain slug reproduce."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_reproduce
+    event:
+      !type:ReproduceActionEvent
+    useDelay: 2
+    priority: -15
+    
+- type: entity
+  id: ActionReleaseSlug
+  name: Release
+  description: "Brain slug release."
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: EntityTargetAction
+    itemIconStyle: NoItem
+    icon:
+      sprite: Interface/Actions/brainslug.rsi
+      state: borer_outfest
+    event:
+      !type:ReproduceActionEvent
+    useDelay: 2
+    priority: -20
