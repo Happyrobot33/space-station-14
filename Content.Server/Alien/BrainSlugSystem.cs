@@ -15,8 +15,9 @@ using Content.Shared.Chemistry.Components;
 using Content.Server.Chat.Systems;
 using Content.Server.Speech.Components;
 using Content.Server.Mind;
-using Content.Shared.Actions.ActionTypes;
+using Content.Shared.Actions;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Audio.Systems;
 using Robust.Server.GameObjects;
 using Content.Server.Medical;
 using Content.Shared.StatusEffect;
@@ -84,15 +85,12 @@ namespace Content.Server.Alien
         protected void OnStartup(EntityUid uid, BrainHuggingComponent component, ComponentStartup args)
         {
             ChangeSlugGenesAmount(uid, 0, component);
+            
+            _actionsSystem.AddAction(uid, component.ActionBrainSlugJump);
 
-            if (component.ActionBrainSlugJump != null)
-                _actionsSystem.AddAction(uid, component.ActionBrainSlugJump, null);
+            _actionsSystem.AddAction(uid, component.BrainSlugAction);
 
-            if (component.BrainSlugAction != null)
-                _actionsSystem.AddAction(uid, component.BrainSlugAction, null);
-
-            if (component.StoreSlugAction != null)
-                _actionsSystem.AddAction(uid, component.StoreSlugAction, null);
+            _actionsSystem.AddAction(uid, component.StoreSlugAction);
         }
 
 
