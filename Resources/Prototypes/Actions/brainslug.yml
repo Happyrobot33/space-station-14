@@ -107,6 +107,6 @@
       sprite: Interface/Actions/brainslug.rsi
       state: borer_outfest
     event:
-      !type:ReproduceActionEvent
+      !type:ReleaseSlugActionEvent
     useDelay: 2
     priority: -20
