@@ -15,7 +15,7 @@ namespace Content.Server.Alien;
 
 [RegisterComponent, NetworkedComponent]
 [Access(typeof(SharedBrainHuggingSystem))]
-public sealed class BrainHuggingComponent : Component
+public sealed partial class BrainHuggingComponent : Component
 {
 
     [ViewVariables(VVAccess.ReadWrite)] public FixedPoint2 SlugGenes = 140;
@@ -64,28 +64,28 @@ public sealed class BrainHuggingComponent : Component
     public SoundSpecifier? SoundBrainSlugJump = new SoundPathSpecifier("/Audio/Animals/brainslug_scream.ogg");
 
     [DataField("actionBrainSlugJump")]
-    public ProtoId<EntityPrototype> ActionBrainSlugJump = "ActionBrainSlugJump"; // jump
+    public EntProtoId ActionBrainSlugJump = "ActionBrainSlugJump"; // jump
 
     [DataField("actionBrainSlug")]
-    public ProtoId<EntityPrototype> BrainSlugAction = "ActionBrainSlug"; // infest
+    public EntProtoId BrainSlugAction = "ActionBrainSlug"; // infest
 
     [DataField("actionDominateVictim")]
-    public ProtoId<EntityPrototype> DominateVictimAction = "ActionDominateVictim"; // stun
+    public EntProtoId DominateVictimAction = "ActionDominateVictim"; // stun
 
     [DataField("actionTormentHostSlug")]
-    public ProtoId<EntityPrototype> TormentHostSlugAction = "ActionTormentHostSlug"; // torment
+    public EntProtoId TormentHostSlugAction = "ActionTormentHostSlug"; // torment
 
     [DataField("actionAssumeControlSlug")]
-    public ProtoId<EntityPrototype> AssumeControlAction = "ActionAssumeControlSlug"; // assume control
+    public EntProtoId AssumeControlAction = "ActionAssumeControlSlug"; // assume control
 
     [DataField("actionReproduceSlug")]
-    public ProtoId<EntityPrototype> ReproduceAction = "ActionReproduceSlug"; // reproduce
+    public EntProtoId ReproduceAction = "ActionReproduceSlug"; // reproduce
 
     [DataField("actionReleaseSlug")]
-    public ProtoId<EntityPrototype> ReleaseSlugAction = "ActionReleaseSlug"; // release
+    public EntProtoId ReleaseSlugAction = "ActionReleaseSlug"; // release
 
     [DataField("actionStoreSlug")]
-    public ProtoId<EntityPrototype> StoreSlugAction = "ActionStoreSlug"; // ui store
+    public EntProtoId StoreSlugAction = "ActionStoreSlug"; // ui store
 
 
 

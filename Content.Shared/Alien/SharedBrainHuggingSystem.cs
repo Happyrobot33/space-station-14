@@ -10,41 +10,41 @@ public abstract class SharedBrainHuggingSystem : EntitySystem
     [Dependency] protected readonly SharedAudioSystem _audioSystem = default!;
 }
 
-public sealed class BrainSlugJumpActionEvent : WorldTargetActionEvent { }
+public sealed partial class BrainSlugJumpActionEvent : WorldTargetActionEvent { }
 
-public sealed class BrainSlugActionEvent : EntityTargetActionEvent { }
+public sealed partial class BrainSlugActionEvent : EntityTargetActionEvent { }
 
-public sealed class DominateVictimActionEvent : EntityTargetActionEvent { }
+public sealed partial class DominateVictimActionEvent : EntityTargetActionEvent { }
 
-public sealed class ReleaseSlugActionEvent : EntityTargetActionEvent { }
+public sealed partial class ReleaseSlugActionEvent : EntityTargetActionEvent { }
 
-public sealed class TormentHostActionEvent : EntityTargetActionEvent { }
+public sealed partial class TormentHostActionEvent : EntityTargetActionEvent { }
 
-public sealed class AssumeControlActionEvent : EntityTargetActionEvent { }
+public sealed partial class AssumeControlActionEvent : EntityTargetActionEvent { }
 
-public sealed class ReproduceActionEvent : EntityTargetActionEvent { }
+public sealed partial class ReproduceActionEvent : EntityTargetActionEvent { }
 
-public sealed class StoreActionEvent : EntityTargetActionEvent { }
+public sealed partial class StoreActionEvent : EntityTargetActionEvent { }
 
-public sealed class ReleaseControlActionEvent : InstantActionEvent { }
-
-[Serializable, NetSerializable]
-public sealed class BrainHuggingDoAfterEvent : SimpleDoAfterEvent { }
+public sealed partial class ReleaseControlActionEvent : InstantActionEvent { }
 
 [Serializable, NetSerializable]
-public sealed class AssumeControlDoAfterEvent : SimpleDoAfterEvent { }
+public sealed partial class BrainHuggingDoAfterEvent : SimpleDoAfterEvent { }
 
 [Serializable, NetSerializable]
-public sealed class ReproduceDoAfterEvent : SimpleDoAfterEvent { }
+public sealed partial class AssumeControlDoAfterEvent : SimpleDoAfterEvent { }
 
 [Serializable, NetSerializable]
-public sealed class ReleaseSlugDoAfterEvent : SimpleDoAfterEvent { }
+public sealed partial class ReproduceDoAfterEvent : SimpleDoAfterEvent { }
 
 [Serializable, NetSerializable]
-public sealed class StoreDoAfterEvent : SimpleDoAfterEvent { }
+public sealed partial class ReleaseSlugDoAfterEvent : SimpleDoAfterEvent { }
 
 [Serializable, NetSerializable]
-public sealed class ReleaseDoAfterEvent : SimpleDoAfterEvent { }
+public sealed partial class StoreDoAfterEvent : SimpleDoAfterEvent { }
+
+[Serializable, NetSerializable]
+public sealed partial class ReleaseDoAfterEvent : SimpleDoAfterEvent { }
 
 
 
