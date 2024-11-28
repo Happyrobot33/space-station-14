@@ -1,34 +1,35 @@
+using Content.Server.Body.Systems;
+using Content.Server.Chat.Systems;
+using Content.Server.GameTicking;
+using Content.Server.Medical;
+using Content.Server.Mind;
 using Content.Server.Popups;
+using Content.Server.Speech.Components;
+using Content.Server.Store.Systems;
+
 using Content.Shared.Actions;
+using Content.Shared.Alert;
+using Content.Shared.Alien;
+using Content.Shared.Chemistry.Components;
+using Content.Shared.DoAfter;
+using Content.Shared.Examine;
+using Content.Shared.FixedPoint;
 using Content.Shared.Humanoid;
 using Content.Shared.Mobs;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
+using Content.Shared.Revenant;
+using Content.Shared.Revenant.Components;
+using Content.Shared.StatusEffect;
+using Content.Shared.Store.Components;
 using Content.Shared.Stunnable;
 using Content.Shared.Throwing;
-using Robust.Shared.Containers;
-using Robust.Shared.Utility;
-using Content.Shared.Alien;
-using Content.Shared.DoAfter;
-using Content.Server.Body.Systems;
-using Content.Shared.Chemistry.Components;
-using Content.Server.Chat.Systems;
-using Content.Server.Speech.Components;
-using Content.Server.Mind;
-using Content.Shared.Actions;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Audio.Systems;
+
 using Robust.Server.GameObjects;
-using Content.Server.Medical;
-using Content.Shared.StatusEffect;
-using Content.Shared.FixedPoint;
-using Content.Server.Store.Components;
-using Content.Shared.Alert;
-using Content.Server.Store.Systems;
-using Content.Server.GameTicking;
-using Content.Shared.Revenant.Components;
-using Content.Shared.Revenant;
-using Content.Shared.Examine;
+using Robust.Shared.Audio.Systems;
+using Robust.Shared.Containers;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 
 namespace Content.Server.Alien
 {
@@ -48,6 +49,7 @@ namespace Content.Server.Alien
         [Dependency] private readonly VomitSystem _vomit = default!;
         [Dependency] private readonly StoreSystem _store = default!;
         [Dependency] private readonly AlertsSystem _alerts = default!;
+        [Dependency] private readonly SharedContainerSystem _container = default!;
 
 
         public override void Initialize()
@@ -71,7 +73,6 @@ namespace Content.Server.Alien
             SubscribeLocalEvent<BrainHuggingComponent, ReproduceActionEvent>(OnReproduceAction);
             SubscribeLocalEvent<BrainHuggingComponent, ReproduceDoAfterEvent>(ReproduceDoAfter);
 
-            //SubscribeLocalEvent<BrainHuggingComponent, StoreActionEvent>(OnStoreAction);
             SubscribeLocalEvent<BrainHuggingComponent, StoreActionEvent>(OnShop);
             SubscribeLocalEvent<BrainHuggingComponent, ExaminedEvent>(OnExamine);
 
@@ -86,11 +87,14 @@ namespace Content.Server.Alien
         {
             ChangeSlugGenesAmount(uid, 0, component);
             
-            _actionsSystem.AddAction(uid, component.ActionBrainSlugJump);
-
-            _actionsSystem.AddAction(uid, component.BrainSlugAction);
-
-            _actionsSystem.AddAction(uid, component.StoreSlugAction);
+            EntityUid? actionEntity = null;
+            
+            foreach (var action in component.BaseActions)
+            {
+                _actionsSystem.AddAction(uid, ref actionEntity, action);
+                if (actionEntity != null && !component.UnlockedAbilities.ContainsKey(action))
+                    component.UnlockedAbilities.Add(action, actionEntity.Value);
+            }
         }
 
 
@@ -104,7 +108,7 @@ namespace Content.Server.Alien
             if (TryComp<StoreComponent>(uid, out var store))
                 _store.UpdateUserInterface(uid, uid, store);
 
-            _alerts.ShowAlert(uid, AlertType.GenesPoint, (short) Math.Clamp(Math.Round(component.SlugGenes.Float() / 10f), 0, 16));
+            //_alerts.ShowAlert(uid, AlertType.GenesPoint, (short) Math.Clamp(Math.Round(component.SlugGenes.Float() / 10f), 0, 16));
 
             return true;
         }
@@ -141,24 +145,15 @@ namespace Content.Server.Alien
                 return;
             }
 
-
             if (!HasComp<HumanoidAppearanceComponent>(args.Target))
                 return;
 
-
-
-
             var host = args.Target;
+            
+            defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(host,"GuardianContainer");
 
-
-
-            defcomp.GuardianContainer = host.EnsureContainer<ContainerSlot>("GuardianContainer");
-
-
-            defcomp.GuardianContainer.Insert(uid);
+            _container.Insert(uid, defcomp.GuardianContainer.Insert);
             DebugTools.Assert(defcomp.GuardianContainer.Contains(uid));
-
-
 
             defcomp.EquipedOn = args.Target;
 

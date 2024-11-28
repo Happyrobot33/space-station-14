@@ -13,7 +13,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototy
 
 namespace Content.Server.Alien;
 
-[RegisterComponent, NetworkedComponent]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState(true)]
 [Access(typeof(SharedBrainHuggingSystem))]
 public sealed partial class BrainHuggingComponent : Component
 {
@@ -62,12 +62,13 @@ public sealed partial class BrainHuggingComponent : Component
 
     [ViewVariables(VVAccess.ReadWrite), DataField("soundBrainSlugJump")]
     public SoundSpecifier? SoundBrainSlugJump = new SoundPathSpecifier("/Audio/Animals/brainslug_scream.ogg");
-
-    [DataField("actionBrainSlugJump")]
-    public EntProtoId ActionBrainSlugJump = "ActionBrainSlugJump"; // jump
-
-    [DataField("actionBrainSlug")]
-    public EntProtoId BrainSlugAction = "ActionBrainSlug"; // infest
+    
+    public readonly List<ProtoId<EntityPrototype>> BaseActions = new()
+    {
+        "ActionBrainSlugJump",
+        "ActionBrainSlug",
+        "ActionStoreSlug"
+    };
 
     [DataField("actionDominateVictim")]
     public EntProtoId DominateVictimAction = "ActionDominateVictim"; // stun
@@ -86,6 +87,13 @@ public sealed partial class BrainHuggingComponent : Component
 
     [DataField("actionStoreSlug")]
     public EntProtoId StoreSlugAction = "ActionStoreSlug"; // ui store
+    
+    /// <summary>
+    /// All unlocked abilities
+    /// </summary>
+    [ViewVariables(VVAccess.ReadOnly)]
+    [AutoNetworkedField]
+    public Dictionary<string, EntityUid?> UnlockedAbilities = new();
 
 
 
