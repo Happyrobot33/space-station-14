@@ -1,4 +1,13 @@
 - type: entity
+  id: ActionStoreSlug
+  name: Shop
+  description: Opens the ability shop.
+  components:
+  - type: InstantAction
+    icon: Interface/Actions/shop.png
+    event: !type:StoreActionEvent
+
+- type: entity
   id: ActionBrainSlugJump
   name: Jump
   description: "Brain slug jump."
@@ -118,7 +127,7 @@
   components:
   - type: InstantAction
     icon: 
-      sprite: Interface/Actions/brainslug.rsi/borer_brain_out
+      sprite: Interface/Actions/brainslug.rsi
       state: borer_brain_out
     event: 
       !type:ReleaseControlActionEvent

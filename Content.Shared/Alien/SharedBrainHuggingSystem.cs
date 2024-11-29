@@ -24,7 +24,7 @@ public sealed partial class AssumeControlActionEvent : EntityTargetActionEvent {
 
 public sealed partial class ReproduceActionEvent : EntityTargetActionEvent { }
 
-public sealed partial class StoreActionEvent : EntityTargetActionEvent { }
+public sealed partial class StoreActionEvent : InstantActionEvent { }
 
 public sealed partial class ReleaseControlActionEvent : InstantActionEvent { }
 

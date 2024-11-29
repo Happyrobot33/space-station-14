@@ -14,6 +14,11 @@
   id: BloodEssence
   displayName: store-currency-display-blood-essence
   canWithdraw: false
+  
+- type: currency
+  id: StolenGenes
+  displayName: store-currency-display-stolen-genes
+  canWithdraw: false
 
 - type: currency
   id: WizCoin
