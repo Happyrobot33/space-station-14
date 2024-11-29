@@ -104,7 +104,7 @@
   description: "Brain slug release."
   categories: [ HideSpawnMenu ]
   components:
-  - type: EntityTargetAction
+  - type: InstantAction
     itemIconStyle: NoItem
     icon:
       sprite: Interface/Actions/brainslug.rsi

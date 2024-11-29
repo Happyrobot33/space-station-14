@@ -434,7 +434,7 @@ namespace Content.Server.Alien
 
             _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, comp.BrainSlugTime, new ReleaseSlugDoAfterEvent(), uid, target: target, used: uid)
             {
-                BreakOnMove = true,
+                BreakOnMove = false,
             });
         }
 

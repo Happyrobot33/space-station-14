@@ -16,7 +16,7 @@ public sealed partial class BrainSlugActionEvent : EntityTargetActionEvent { }
 
 public sealed partial class DominateVictimActionEvent : EntityTargetActionEvent { }
 
-public sealed partial class ReleaseSlugActionEvent : EntityTargetActionEvent { }
+public sealed partial class ReleaseSlugActionEvent : InstantActionEvent { }
 
 public sealed partial class TormentHostActionEvent : EntityTargetActionEvent { }
 
