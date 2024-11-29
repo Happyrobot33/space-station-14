@@ -48,8 +48,24 @@
       - HumanoidAppearance
     canTargetSelf: false
     interactOnMiss: false
-    path: /Audio/Effects/pop.ogg
+    sound: /Audio/Effects/pop.ogg
     icon:
       sprite:  _Starlight/Interface/Actions/actions_spider.rsi
       state: egg
     event: !type:EggInjectionEvent
+
+- type: entity
+  id: ActionEggsLaying
+  name: Lay the egg.
+  description: Lay the egg.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigAction
+    renewCharges: true
+    charges: 1
+    maxCharges: 3
+    useDelay: 150
+    icon:
+      sprite: _Starlight/Interface/Actions/actions_spider.rsi
+      state: egg
+    event: !type:EggsLayingEvent
