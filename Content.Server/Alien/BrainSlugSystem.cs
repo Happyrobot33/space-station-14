@@ -139,13 +139,7 @@ namespace Content.Server.Alien
 
             _entityManager.AddComponent<SlugInsideComponent>(args.Target);
 
-            TryComp(uid, out BrainSlugComponent? defcomp);
-            if (defcomp == null)
-            {
-                return;
-            }
-
-            if (!HasComp<HumanoidAppearanceComponent>(args.Target))
+            if (!TryComp(uid, out BrainSlugComponent? defcomp) || !HasComp<HumanoidAppearanceComponent>(args.Target))
                 return;
 
             var host = args.Target;
@@ -167,12 +161,6 @@ namespace Content.Server.Alien
         {
             if (args.Handled)
                 return;
-            
-            if (component.GuardianContainer != null)
-            {
-                _container.Remove(uid, component.GuardianContainer);
-                component.GuardianContainer = null;
-            }
 
             args.Handled = true;
             var xform = Transform(uid);
@@ -235,13 +223,16 @@ namespace Content.Server.Alien
             else if (args.Args.Target != null)
             {
                 var target = args.Target;
-                if (target == null && component.GuardianContainer != null)
+                if (target == null)
                     return;
                 
-                component.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target,"GuardianContainer");
+                if (TryComp(target, out BrainSlugComponent? defcomp) && !defcomp.GuardianContainer.Contains(uid))
+                {
+                    defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target.Value, "GuardianContainer");
                 
-                _container.Insert(uid, component.GuardianContainer);
-                DebugTools.Assert(component.GuardianContainer.Contains(uid));
+                    _container.Insert(uid, defcomp.GuardianContainer);
+                    DebugTools.Assert(defcomp.GuardianContainer.Contains(uid));
+                }
 
                 _actionsSystem.AddAction(uid, component.DominateVictimAction);
 
@@ -455,8 +446,6 @@ namespace Content.Server.Alien
                 return;
 
             _container.Remove(uid, component.GuardianContainer);
-            component.GuardianContainer = null;
-            DebugTools.Assert(!component.GuardianContainer.Contains(uid));
 
             if (TryComp(args.Target, out SlugInsideComponent? slugcomp))
             {
