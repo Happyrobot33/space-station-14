@@ -89,11 +89,9 @@ namespace Content.Server.Alien
         {
             ChangeSlugGenesAmount(uid, 0, component);
             
-            EntityUid? actionEntity = null;
-            
             foreach (var action in component.BaseActions)
             {
-                _actionsSystem.AddAction(uid, ref actionEntity, action);
+                var actionEntity = _actionsSystem.AddAction(uid, action);
                 if (actionEntity != null && !component.UnlockedAbilities.ContainsKey(action))
                     component.UnlockedAbilities.Add(action, actionEntity.Value);
             }
@@ -169,6 +167,12 @@ namespace Content.Server.Alien
         {
             if (args.Handled)
                 return;
+            
+            if (component.GuardianContainer != null)
+            {
+                _container.Remove(uid, component.GuardianContainer);
+                component.GuardianContainer = null;
+            }
 
             args.Handled = true;
             var xform = Transform(uid);
@@ -231,11 +235,13 @@ namespace Content.Server.Alien
             else if (args.Args.Target != null)
             {
                 var target = args.Target;
-                if (target == null)
-                {
+                if (target == null && component.GuardianContainer != null)
                     return;
-                }
-
+                
+                component.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target,"GuardianContainer");
+                
+                _container.Insert(uid, component.GuardianContainer);
+                DebugTools.Assert(component.GuardianContainer.Contains(uid));
 
                 _actionsSystem.AddAction(uid, component.DominateVictimAction);
 
@@ -449,6 +455,7 @@ namespace Content.Server.Alien
                 return;
 
             _container.Remove(uid, component.GuardianContainer);
+            component.GuardianContainer = null;
             DebugTools.Assert(!component.GuardianContainer.Contains(uid));
 
             if (TryComp(args.Target, out SlugInsideComponent? slugcomp))

@@ -22,7 +22,6 @@
       !type:BrainSlugJumpActionEvent
     useDelay: 2
     range: 160
-    priority: -10
     
 - type: entity
   id: ActionBrainSlug
@@ -38,7 +37,6 @@
     event:
       !type:BrainSlugActionEvent
     useDelay: 2
-    priority: -11
     
 - type: entity
   id: ActionDominateVictim
@@ -54,7 +52,6 @@
     event:
       !type:DominateVictimActionEvent
     useDelay: 2
-    priority: -12
     
 - type: entity
   id: ActionTormentHostSlug
@@ -70,7 +67,6 @@
     event:
       !type:TormentHostActionEvent
     useDelay: 2
-    priority: -13
     
 - type: entity
   id: ActionAssumeControlSlug
@@ -86,7 +82,6 @@
     event:
       !type:AssumeControlActionEvent
     useDelay: 2
-    priority: -14
     
 - type: entity
   id: ActionReproduceSlug
@@ -102,7 +97,6 @@
     event:
       !type:ReproduceActionEvent
     useDelay: 2
-    priority: -15
     
 - type: entity
   id: ActionReleaseSlug
@@ -118,7 +112,6 @@
     event:
       !type:ReleaseSlugActionEvent
     useDelay: 2
-    priority: -20
     
 - type: entity
   id: ActionReleaseControl
@@ -126,10 +119,9 @@
   description: Release
   components:
   - type: InstantAction
+    itemIconStyle: NoItem
     icon: 
       sprite: Interface/Actions/brainslug.rsi
       state: borer_brain_out
-    event: 
-      !type:ReleaseControlActionEvent
+    event: !type:ReleaseControlActionEvent
     useDelay: 2
-    priority: -19
