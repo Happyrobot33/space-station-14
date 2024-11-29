@@ -4,7 +4,7 @@ namespace Content.Server.Alien;
 
 
 [RegisterComponent]
-public sealed class BrainSlugComponent : Component
+public sealed partial class BrainSlugComponent : Component
 {
     public EntityUid Parent;
 

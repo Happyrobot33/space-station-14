@@ -4,7 +4,7 @@ namespace Content.Server.Alien;
 
 
 [RegisterComponent]
-public sealed class SlugInsideComponent : Component
+public sealed partial class SlugInsideComponent : Component
 {
     [ViewVariables(VVAccess.ReadWrite)]
     public EntityUid Slug;
