@@ -4,7 +4,6 @@ using Content.Server.GameTicking;
 using Content.Server.Medical;
 using Content.Server.Mind;
 using Content.Server.Popups;
-using Content.Server.Speech.Components;
 using Content.Server.Store.Systems;
 
 using Content.Shared.Actions;
@@ -20,6 +19,7 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
 using Content.Shared.Revenant;
 using Content.Shared.Revenant.Components;
+using Content.Shared.Speech.Components;
 using Content.Shared.StatusEffect;
 using Content.Shared.Store.Components;
 using Content.Shared.Stunnable;
@@ -28,6 +28,7 @@ using Content.Shared.Throwing;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
+using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
@@ -44,6 +45,7 @@ namespace Content.Server.Alien
         [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
         [Dependency] private readonly ChatSystem _chat = default!;
         [Dependency] private readonly IEntityManager _entityManager = default!;
+        [Dependency] private readonly SharedTransformSystem _transform = default!;
         [Dependency] private readonly IPrototypeManager _proto = default!;
         [Dependency] private readonly MindSystem _mind = default!;
         [Dependency] private readonly VomitSystem _vomit = default!;
@@ -152,7 +154,7 @@ namespace Content.Server.Alien
             
             defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(host,"GuardianContainer");
 
-            _container.Insert(uid, defcomp.GuardianContainer.Insert);
+            _container.Insert(uid, defcomp.GuardianContainer);
             DebugTools.Assert(defcomp.GuardianContainer.Contains(uid));
 
             defcomp.EquipedOn = args.Target;
@@ -170,7 +172,7 @@ namespace Content.Server.Alien
 
             args.Handled = true;
             var xform = Transform(uid);
-            var mapCoords = args.Target.ToMap(EntityManager);
+            var mapCoords = args.Target.ToMap(EntityManager, _transform);
             Logger.Info(xform.MapPosition.ToString());
             Logger.Info(mapCoords.ToString());
             var direction = mapCoords.Position - xform.MapPosition.Position;
@@ -206,10 +208,9 @@ namespace Content.Server.Alien
                     case MobState.Alive:
                     case MobState.Critical:
                         _popup.PopupEntity(Loc.GetString("Slug is sucking on your brain!"), uid, uid);
-                        _doAfterSystem.TryStartDoAfter(new DoAfterArgs(uid, hugcomp.BrainSlugTime, new BrainHuggingDoAfterEvent(), uid, target: target, used: uid)
+                        _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, hugcomp.BrainSlugTime, new BrainHuggingDoAfterEvent(), uid, target: target, used: uid)
                         {
-                            BreakOnTargetMove = false,
-                            BreakOnUserMove = true,
+                            BreakOnMove = true,
                         });
                         break;
                     default:
@@ -236,29 +237,26 @@ namespace Content.Server.Alien
                 }
 
 
-                if (component.DominateVictimAction != null)
-                    _actionsSystem.AddAction(uid, component.DominateVictimAction, null);
+                _actionsSystem.AddAction(uid, component.DominateVictimAction);
 
-                if (component.ReleaseSlugAction != null)
-                    _actionsSystem.AddAction(uid, component.ReleaseSlugAction, null);
+                _actionsSystem.AddAction(uid, component.ReleaseSlugAction);
 
-                if (component.TormentHostSlugAction != null)
-                    _actionsSystem.AddAction(uid, component.TormentHostSlugAction, null);
+                _actionsSystem.AddAction(uid, component.TormentHostSlugAction);
 
-                if (component.AssumeControlAction != null)
-                    _actionsSystem.AddAction(uid, component.AssumeControlAction, null);
+                _actionsSystem.AddAction(uid, component.AssumeControlAction);
 
-                if (component.ReproduceAction != null)
-                    _actionsSystem.AddAction(uid, component.ReproduceAction, null);
+                _actionsSystem.AddAction(uid, component.ReproduceAction);
+                
+                foreach (var action in component.BaseActions)
+                {
+                    if (component.UnlockedAbilities.ContainsKey(action) && component.UnlockedAbilities.TryGetValue(action, out var actionEntity))
+                    {
+                        _actionsSystem.RemoveAction(uid, actionEntity);
+                        component.UnlockedAbilities.Remove(action);
+                    }
+                }
 
-                if (component.StoreSlugAction != null)
-                    _actionsSystem.AddAction(uid, component.StoreSlugAction, null);
-
-                if (component.ActionBrainSlugJump != null)
-                    _actionsSystem.RemoveAction(uid, component.ActionBrainSlugJump, null);
-
-                if (component.BrainSlugAction != null)
-                    _actionsSystem.RemoveAction(uid, component.BrainSlugAction, null);
+                _actionsSystem.AddAction(uid, component.StoreSlugAction);
 
 
                 if (TryComp(target, out MobStateComponent? mobState))
@@ -326,10 +324,9 @@ namespace Content.Server.Alien
             }
 
             _popup.PopupEntity(Loc.GetString("You feel like a slug inside your head wants to take over your nervous system!"), target, target, PopupType.LargeCaution);
-            _doAfterSystem.TryStartDoAfter(new DoAfterArgs(uid, hugcomp.AssumeControlTime, new AssumeControlDoAfterEvent(), uid, target: target, used: uid)
+            _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, hugcomp.AssumeControlTime, new AssumeControlDoAfterEvent(), uid, target: target, used: uid)
             {
-                BreakOnTargetMove = false,
-                BreakOnUserMove = true,
+                BreakOnMove = true,
             });
 
         }
@@ -357,11 +354,10 @@ namespace Content.Server.Alien
                 targetcomp.Parent = target.Value;
             }
 
-            _mind.TryGetMind(uid, out var mind);
+            _mind.TryGetMind(uid, out var mindId, out var mind);
 
             if (mind != null)
-                _mind.TransferTo(mind, args.Target);
-
+                _mind.TransferTo(mindId, args.Target);
 
             if (targetcomp != null)
                 if (targetcomp.ReleaseControlName != null)
