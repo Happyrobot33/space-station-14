@@ -63,7 +63,7 @@ public sealed partial class BrainHuggingComponent : Component
     [ViewVariables(VVAccess.ReadWrite), DataField("soundBrainSlugJump")]
     public SoundSpecifier? SoundBrainSlugJump = new SoundPathSpecifier("/Audio/Animals/brainslug_scream.ogg");
     
-    public readonly List<ProtoId<EntityPrototype>> BaseActions = new()
+    public readonly List<EntProtoId> BaseActions = new()
     {
         "ActionBrainSlugJump",
         "ActionBrainSlug",
