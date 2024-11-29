@@ -110,3 +110,17 @@
       !type:ReleaseSlugActionEvent
     useDelay: 2
     priority: -20
+    
+- type: entity
+  id: ActionReleaseControl
+  name: Release
+  description: Release
+  components:
+  - type: InstantAction
+    icon: 
+      sprite: Interface/Actions/brainslug.rsi/borer_brain_out
+      state: borer_brain_out
+    event: 
+      !type:ReleaseControlActionEvent
+    useDelay: 2
+    priority: -19

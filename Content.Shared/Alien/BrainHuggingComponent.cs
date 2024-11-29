@@ -88,6 +88,9 @@ public sealed partial class BrainHuggingComponent : Component
     [DataField("actionStoreSlug")]
     public EntProtoId StoreSlugAction = "ActionStoreSlug"; // ui store
     
+    [DataField("actionReleaseControl")]
+    public EntProtoId ReleaseControlAction = "ActionStoreSlug"; // ui store
+    
     /// <summary>
     /// All unlocked abilities
     /// </summary>

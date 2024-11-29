@@ -359,12 +359,8 @@ namespace Content.Server.Alien
             if (mind != null)
                 _mind.TransferTo(mindId, args.Target);
 
-            if (targetcomp != null)
-                if (targetcomp.ReleaseControlName != null)
-                {
-                    var theAction = new InstantAction(_proto.Index<InstantActionPrototype>(targetcomp.ReleaseControlName));
-                    _actionsSystem.AddAction(target.Value, theAction, null);
-                }
+            if (targetcomp != null && targetcomp.ReleaseControlName != null)
+                _actionsSystem.AddAction(target.Value, comp.ReleaseControlAction);
         }
 
         private void OnReproduceAction(EntityUid uid, BrainHuggingComponent comp, ReproduceActionEvent args)
@@ -382,10 +378,9 @@ namespace Content.Server.Alien
             }
 
             _popup.PopupEntity(Loc.GetString("You start to feel bad, as if something is about to come out of you!"), target, target, PopupType.LargeCaution);
-            _doAfterSystem.TryStartDoAfter(new DoAfterArgs(uid, hugcomp.ReproduceTime, new ReproduceDoAfterEvent(), uid, target: target, used: uid)
+            _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, hugcomp.ReproduceTime, new ReproduceDoAfterEvent(), uid, target: target, used: uid)
             {
-                BreakOnTargetMove = false,
-                BreakOnUserMove = true,
+                BreakOnMove = true,
             });
 
         }
@@ -409,24 +404,21 @@ namespace Content.Server.Alien
 
         private void OnReleaseControlAction(EntityUid uid, SlugInsideComponent comp, ReleaseControlActionEvent args)
         {
-
-
             if (TryComp(uid, out SlugInsideComponent? slug))
             {
-                _mind.TryGetMind(uid, out var slugmind);
-                if (slugmind != null)
-                    _mind.TransferTo(slugmind, slug.Slug);
+                _mind.TryGetMind(uid, out var slugMindId, out var slugMind);
+                if (slugMindId != null)
+                    _mind.TransferTo(slugMindId, slug.Slug);
             }
             if (TryComp(uid, out SlugInsideComponent? parrent))
             {
-                _mind.TryGetMind(parrent.NetParent, out var parrentmind);
-                if (parrentmind != null)
-                    _mind.TransferTo(parrentmind, parrent.Parent);
+                _mind.TryGetMind(parrent.NetParent, out var parrentMindId, out var parrentMind);
+                if (parrentMindId != null)
+                    _mind.TransferTo(parrentMindId.Value, parrent.Parent);
             }
             if (comp.ReleaseControlName != null)
             {
-                var theAction = new InstantAction(_proto.Index<InstantActionPrototype>(comp.ReleaseControlName));
-                _actionsSystem.RemoveAction(uid, theAction, null);
+                //_actionsSystem.RemoveAction(uid, theAction);
             }
 
             _popup.PopupEntity(Loc.GetString("The slug got out of your nervous system."), uid, uid);
@@ -443,12 +435,9 @@ namespace Content.Server.Alien
 
             var target = defcomp.EquipedOn;
 
-
-
-            _doAfterSystem.TryStartDoAfter(new DoAfterArgs(uid, comp.BrainSlugTime, new ReleaseSlugDoAfterEvent(), uid, target: target, used: uid)
+            _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, comp.BrainSlugTime, new ReleaseSlugDoAfterEvent(), uid, target: target, used: uid)
             {
-                BreakOnTargetMove = false,
-                BreakOnUserMove = true,
+                BreakOnMove = true,
             });
         }
 
@@ -457,14 +446,10 @@ namespace Content.Server.Alien
         {
             TryComp(uid, out BrainHuggingComponent? hugcomp);
             if (hugcomp == null)
-            {
                 return;
-            }
 
-
-            component.GuardianContainer.Remove(uid);
+            _container.Remove(uid, component.GuardianContainer);
             DebugTools.Assert(!component.GuardianContainer.Contains(uid));
-
 
             if (TryComp(args.Target, out SlugInsideComponent? slugcomp))
             {
@@ -473,30 +458,23 @@ namespace Content.Server.Alien
                     _entityManager.RemoveComponent<SlugInsideComponent>(target.Value);
             }
 
+            /* Needs refactoring
+            _actionsSystem.RemoveAction(uid, hugcomp.ReleaseSlugAction);
 
-            if (hugcomp.ReleaseSlugAction != null)
-                _actionsSystem.RemoveAction(uid, hugcomp.ReleaseSlugAction);
+            _actionsSystem.RemoveAction(uid, hugcomp.DominateVictimAction);
 
-            if (hugcomp.DominateVictimAction != null)
-                _actionsSystem.RemoveAction(uid, hugcomp.DominateVictimAction);
+            _actionsSystem.RemoveAction(uid, hugcomp.TormentHostSlugAction);
 
-            if (hugcomp.TormentHostSlugAction != null)
-                _actionsSystem.RemoveAction(uid, hugcomp.TormentHostSlugAction, null);
+            _actionsSystem.RemoveAction(uid, hugcomp.AssumeControlAction);
 
-            if (hugcomp.AssumeControlAction != null)
-                _actionsSystem.RemoveAction(uid, hugcomp.AssumeControlAction, null);
+            _actionsSystem.RemoveAction(uid, hugcomp.ReproduceAction);
 
-            if (hugcomp.ReproduceAction != null)
-                _actionsSystem.RemoveAction(uid, hugcomp.ReproduceAction, null);
+            _actionsSystem.RemoveAction(uid, hugcomp.StoreSlugAction);
 
-            if (hugcomp.StoreSlugAction != null)
-                _actionsSystem.RemoveAction(uid, hugcomp.StoreSlugAction, null);
-
-            if (hugcomp.ActionBrainSlugJump != null)
-                _actionsSystem.AddAction(uid, hugcomp.ActionBrainSlugJump, null);
-
-            if (hugcomp.BrainSlugAction != null)
-                _actionsSystem.AddAction(uid, hugcomp.BrainSlugAction, null);
+            _actionsSystem.AddAction(uid, hugcomp.ActionBrainSlugJump);
+            
+            _actionsSystem.AddAction(uid, hugcomp.BrainSlugAction);
+            */
         }
 
         private void OnStoreAction(EntityUid uid, BrainHuggingComponent component, StoreActionEvent args)
