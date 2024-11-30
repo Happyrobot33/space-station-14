@@ -700,3 +700,46 @@ Entries:
   id: 99
   time: '2024-11-29T13:14:00.000000+00:00'
   url: https://github.com/ss14Starlight/space-station-14/pull/4d5a9474db725275680c94035b401fd8b425af77
+- author: Miracula
+  changes:
+  - message: Changed salary and time requirements for sec department
+    type: Tweak
+  id: 100
+  time: '2024-11-29T14:58:02.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/94
+- author: Miracula
+  changes:
+  - message: Added brigmedic glasses
+    type: Add
+  id: 101
+  time: '2024-11-29T17:57:26.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/95
+- author: fishbait
+  changes:
+  - message: removed contraband tag from advanced circular saw
+    type: Fix
+  id: 102
+  time: '2024-11-29T23:53:37.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/97
+- author: STARLIGHT TEAM
+  changes:
+  - message: Many random events have been casualized
+    type: Tweak
+  id: 103
+  time: '2024-11-30T05:26:01.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/100
+- author: luxikMC
+  changes:
+  - message: All maps updated.
+    type: Tweak
+  id: 104
+  time: '2024-11-30T06:04:46.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/102
+- author: Miracula
+  changes:
+  - message: Fixed brigmedic not being part of security on crew monitor
+    type: Fix
+  id: 105
+  time: '2024-11-30T06:18:45.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/99
+

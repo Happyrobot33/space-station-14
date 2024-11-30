@@ -4,12 +4,12 @@
   description: job-description-brigmedic
   playTimeTracker: JobBrigmedic
   requirements:
-  - !type:DepartmentTimeRequirement
-    department: Security
-    time: 72000 #20 hrs
-  - !type:DepartmentTimeRequirement
-    department: Medical
-    time: 54000 #15 hrs
+    - !type:RoleTimeRequirement
+      role: JobSecurityOfficer
+      time: 36000 # 10 hrs
+    - !type:DepartmentTimeRequirement
+      department: Medical
+      time: 28800 # 8 hrs
   startingGear: BrigmedicGear
   icon: "JobIconBrigmedic"
   supervisors: job-supervisors-hos
@@ -29,13 +29,14 @@
 - type: startingGear
   id: BrigmedicGear
   equipment:
-    eyes: ClothingEyesHudMedSec
-    ears: ClothingHeadsetSecurity
+    eyes: ClothingEyesGlassesBrigmedic
+    ears: ClothingHeadsetBrigmedic
     neck: ClothingNeckTieRed
     pocket1: WeaponPistolMk58
     mask: ClothingMaskBreathMedicalSecurity
     id: BrigmedicPDA
     gloves: ClothingHandsGlovesNitrile
+    belt: ClothingBeltBrigmedicFilled
   storage:
     back:
     - Flash
