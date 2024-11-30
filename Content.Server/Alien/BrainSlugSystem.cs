@@ -132,12 +132,10 @@ namespace Content.Server.Alien
         private void OnBrainSlugDoHit(EntityUid uid, BrainHuggingComponent component, ThrowDoHitEvent args)
         {
 
-            if (TryComp(args.Target, out SlugInsideComponent? sluginside))
-            {
-                return;
-            }
+            //if (TryComp(args.Target, out SlugInsideComponent? sluginside))
+            //    return;
 
-            _entityManager.AddComponent<SlugInsideComponent>(args.Target);
+            //_entityManager.AddComponent<SlugInsideComponent>(args.Target);
 
             if (!TryComp(uid, out BrainSlugComponent? defcomp) || !HasComp<HumanoidAppearanceComponent>(args.Target))
                 return;
@@ -151,8 +149,7 @@ namespace Content.Server.Alien
 
             defcomp.EquipedOn = args.Target;
 
-            _popup.PopupEntity(Loc.GetString("Something jumped on you!"),
-                args.Target, args.Target, PopupType.LargeCaution);
+            _popup.PopupEntity(Loc.GetString("Something jumped on you!"), args.Target, args.Target, PopupType.LargeCaution);
         }
 
 
@@ -161,6 +158,9 @@ namespace Content.Server.Alien
         {
             if (args.Handled)
                 return;
+            
+            if (TryComp(uid, out BrainSlugComponent? defcomp) && defcomp.GuardianContainer != null)
+                _container.Remove(uid, defcomp.GuardianContainer);
 
             args.Handled = true;
             var xform = Transform(uid);
