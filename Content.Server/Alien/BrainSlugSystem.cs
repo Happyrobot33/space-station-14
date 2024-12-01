@@ -131,21 +131,17 @@ namespace Content.Server.Alien
 
         private void OnBrainSlugDoHit(EntityUid uid, BrainHuggingComponent component, ThrowDoHitEvent args)
         {
-
-            //if (TryComp(args.Target, out SlugInsideComponent? sluginside))
-            //    return;
-
-            //_entityManager.AddComponent<SlugInsideComponent>(args.Target);
-
             if (!TryComp(uid, out BrainSlugComponent? defcomp) || !HasComp<HumanoidAppearanceComponent>(args.Target))
                 return;
 
             var host = args.Target;
             
+            if (defcomp.GuardianContainer == _container.EnsureContainer<ContainerSlot>(host,"GuardianContainer"))
+                return;
+            
             defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(host,"GuardianContainer");
 
             _container.Insert(uid, defcomp.GuardianContainer);
-            DebugTools.Assert(defcomp.GuardianContainer.Contains(uid));
 
             defcomp.EquipedOn = args.Target;
 
@@ -231,18 +227,17 @@ namespace Content.Server.Alien
                     defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target.Value, "GuardianContainer");
                 
                     _container.Insert(uid, defcomp.GuardianContainer);
-                    DebugTools.Assert(defcomp.GuardianContainer.Contains(uid));
                 }
+                
+                UpdateAbilities(uid, component, component.DominateVictimAction, true);
+                
+                UpdateAbilities(uid, component, component.ReleaseSlugAction, true);
+                
+                UpdateAbilities(uid, component, component.TormentHostSlugAction, true);
+                
+                UpdateAbilities(uid, component, component.AssumeControlAction, true);
 
-                _actionsSystem.AddAction(uid, component.DominateVictimAction);
-
-                _actionsSystem.AddAction(uid, component.ReleaseSlugAction);
-
-                _actionsSystem.AddAction(uid, component.TormentHostSlugAction);
-
-                _actionsSystem.AddAction(uid, component.AssumeControlAction);
-
-                _actionsSystem.AddAction(uid, component.ReproduceAction);
+                UpdateAbilities(uid, component, component.ReproduceAction, true);
                 
                 foreach (var action in component.BaseActions)
                 {
@@ -453,8 +448,26 @@ namespace Content.Server.Alien
                 if (target != null && slugcomp != null)
                     _entityManager.RemoveComponent<SlugInsideComponent>(target.Value);
             }
-
+            
+            UpdateAbilities(uid, hugcomp, hugcomp.ReleaseSlugAction, false);
+            
+            UpdateAbilities(uid, hugcomp, hugcomp.DominateVictimAction, false);
+            
+            UpdateAbilities(uid, hugcomp, hugcomp.TormentHostSlugAction, false);
+            
+            UpdateAbilities(uid, hugcomp, hugcomp.AssumeControlAction, false);
+            
+            UpdateAbilities(uid, hugcomp, hugcomp.ReproduceAction, false);
+            
+            foreach (var action in hugcomp.BaseActions)
+            {
+                var actionEntity = _actionsSystem.AddAction(uid, action);
+                if (actionEntity != null && !hugcomp.UnlockedAbilities.ContainsKey(action))
+                    hugcomp.UnlockedAbilities.Add(action, actionEntity.Value);
+            }
+            
             /* Needs refactoring
+            
             _actionsSystem.RemoveAction(uid, hugcomp.ReleaseSlugAction);
 
             _actionsSystem.RemoveAction(uid, hugcomp.DominateVictimAction);
@@ -476,6 +489,33 @@ namespace Content.Server.Alien
         private void OnStoreAction(EntityUid uid, BrainHuggingComponent component, StoreActionEvent args)
         {
             _popup.PopupEntity(Loc.GetString("Slug don't have enough genes"), uid, uid);
+        }
+        
+        private void UpdateAbilities(EntityUid uid, BrainHuggingComponent component, string actionId, bool addAction)
+        {
+            EntityUid? actionEntity = null;
+            if (addAction)
+            {
+                if (!component.UnlockedAbilities.ContainsKey(actionId))
+                {
+                    _actionsSystem.AddAction(uid, ref actionEntity, actionId);
+                    if (actionEntity != null)
+                        component.UnlockedAbilities.Add(actionId, actionEntity.Value);
+                }
+            }
+            else
+            {
+                if (component.UnlockedAbilities.TryGetValue(actionId, out var abilityUid))
+                {
+                    if (TryComp(uid, out ActionsComponent? comp))
+                    {
+                        _actionsSystem.RemoveAction(uid, abilityUid, comp);
+                        if (component.UnlockedAbilities.ContainsKey(actionId))
+                            component.UnlockedAbilities.Remove(actionId);
+                    }
+                }
+            }
+            Dirty(uid, component);
         }
 
 

@@ -20,8 +20,8 @@
       state: borer_jump
     event:
       !type:BrainSlugJumpActionEvent
-    useDelay: 2
-    range: 160
+    useDelay: 5
+    range: 80
     
 - type: entity
   id: ActionBrainSlug
