@@ -239,6 +239,8 @@ namespace Content.Server.Alien
 
                 UpdateAbilities(uid, component, component.ReproduceAction, true);
                 
+                UpdateAbilities(uid, component, component.StoreSlugAction, true);
+                
                 foreach (var action in component.BaseActions)
                 {
                     if (component.UnlockedAbilities.ContainsKey(action) && component.UnlockedAbilities.TryGetValue(action, out var actionEntity))
@@ -459,31 +461,10 @@ namespace Content.Server.Alien
             
             UpdateAbilities(uid, hugcomp, hugcomp.ReproduceAction, false);
             
+            UpdateAbilities(uid, hugcomp, hugcomp.StoreSlugAction, false);
+            
             foreach (var action in hugcomp.BaseActions)
-            {
-                var actionEntity = _actionsSystem.AddAction(uid, action);
-                if (actionEntity != null && !hugcomp.UnlockedAbilities.ContainsKey(action))
-                    hugcomp.UnlockedAbilities.Add(action, actionEntity.Value);
-            }
-            
-            /* Needs refactoring
-            
-            _actionsSystem.RemoveAction(uid, hugcomp.ReleaseSlugAction);
-
-            _actionsSystem.RemoveAction(uid, hugcomp.DominateVictimAction);
-
-            _actionsSystem.RemoveAction(uid, hugcomp.TormentHostSlugAction);
-
-            _actionsSystem.RemoveAction(uid, hugcomp.AssumeControlAction);
-
-            _actionsSystem.RemoveAction(uid, hugcomp.ReproduceAction);
-
-            _actionsSystem.RemoveAction(uid, hugcomp.StoreSlugAction);
-
-            _actionsSystem.AddAction(uid, hugcomp.ActionBrainSlugJump);
-            
-            _actionsSystem.AddAction(uid, hugcomp.BrainSlugAction);
-            */
+                UpdateAbilities(uid, hugcomp, action, true);
         }
 
         private void OnStoreAction(EntityUid uid, BrainHuggingComponent component, StoreActionEvent args)

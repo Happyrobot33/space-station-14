@@ -63,11 +63,11 @@ public sealed partial class BrainHuggingComponent : Component
     [ViewVariables(VVAccess.ReadWrite), DataField("soundBrainSlugJump")]
     public SoundSpecifier? SoundBrainSlugJump = new SoundPathSpecifier("/Audio/Animals/brainslug_scream.ogg");
     
-    public readonly List<EntProtoId> BaseActions = new()
+    [ViewVariables(VVAccess.ReadOnly)]
+    public List<EntProtoId> BaseActions = new()
     {
         "ActionBrainSlugJump",
-        "ActionBrainSlug",
-        "ActionStoreSlug"
+        "ActionBrainSlug"
     };
 
     [DataField("actionDominateVictim")]
@@ -96,6 +96,7 @@ public sealed partial class BrainHuggingComponent : Component
     /// </summary>
     [ViewVariables(VVAccess.ReadOnly)]
     [AutoNetworkedField]
+    [DataField("unlockedAbilities")]
     public Dictionary<string, EntityUid?> UnlockedAbilities = new();
 
 

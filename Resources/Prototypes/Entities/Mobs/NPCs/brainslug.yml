@@ -2,7 +2,7 @@
   parent: SimpleMobBase
   name: brain slug
   id: MobBrainSlug
-  suffix: qweqwe
+  suffix: AI
   components:
     - type: BrainSlug ## first
     - type: BrainHugging ## second
