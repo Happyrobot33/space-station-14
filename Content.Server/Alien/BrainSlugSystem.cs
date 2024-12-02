@@ -90,6 +90,8 @@ namespace Content.Server.Alien
         {
             ChangeSlugGenesAmount(uid, 0, component);
             
+            UpdateAbilities(uid, component, component.BrainSlugJumpAction, true);
+            
             foreach (var action in component.BaseActions)
             {
                 var actionEntity = _actionsSystem.AddAction(uid, action);
@@ -117,10 +119,8 @@ namespace Content.Server.Alien
         private void OnExamine(EntityUid uid, BrainHuggingComponent component, ExaminedEvent args)
         {
             if (args.Examiner == args.Examined)
-            {
                 args.PushMarkup(Loc.GetString("revenant-essence-amount",
                     ("current", component.SlugGenes.Int()), ("max", component.EssenceRegenCap.Int())));
-            }
         }
 
         private void OnShop(EntityUid uid, BrainHuggingComponent component, StoreActionEvent args)
@@ -169,9 +169,7 @@ namespace Content.Server.Alien
 
             _throwing.TryThrow(uid, direction, 7F, uid, 10F);
             if (component.SoundBrainSlugJump != null)
-            {
                 _audioSystem.PlayPvs(component.SoundBrainSlugJump, uid, component.SoundBrainSlugJump.Params);
-            }
         }
 
 
@@ -184,10 +182,9 @@ namespace Content.Server.Alien
             var target = args.Target;
 
             TryComp(uid, out BrainHuggingComponent? hugcomp);
+            
             if (hugcomp == null)
-            {
                 return;
-            }
 
             if (TryComp(target, out MobStateComponent? targetState))
             {
@@ -242,6 +239,8 @@ namespace Content.Server.Alien
                 
                 UpdateAbilities(uid, component, component.StoreSlugAction, true);
                 
+                UpdateAbilities(uid, component, component.BrainSlugJumpAction, false);
+                
                 foreach (var action in component.BaseActions)
                 {
                     if (component.UnlockedAbilities.ContainsKey(action) && component.UnlockedAbilities.TryGetValue(action, out var actionEntity))
@@ -280,10 +279,9 @@ namespace Content.Server.Alien
             var target = args.Target;
 
             TryComp(uid, out BrainHuggingComponent? hugcomp);
+            
             if (hugcomp == null)
-            {
                 return;
-            }
 
 
             _popup.PopupEntity(Loc.GetString("Your limbs are stiff!"), uid, uid);
@@ -313,10 +311,9 @@ namespace Content.Server.Alien
             var target = args.Target;
 
             TryComp(uid, out BrainHuggingComponent? hugcomp);
+            
             if (hugcomp == null)
-            {
                 return;
-            }
 
             _popup.PopupEntity(Loc.GetString("You feel like a slug inside your head wants to take over your nervous system!"), target, target, PopupType.LargeCaution);
             _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, hugcomp.AssumeControlTime, new AssumeControlDoAfterEvent(), uid, target: target, used: uid)
@@ -331,21 +328,16 @@ namespace Content.Server.Alien
         {
             var target = args.Target;
             if (target == null)
-            {
                 return;
-            }
 
             if (TryComp(target, out SlugInsideComponent? targetcomp))
             {
                 targetcomp.Slug = uid;
+                
                 if (TryComp(target, out SlugInsideComponent? ttt))
-                {
                     if (_entityManager.TryGetComponent<ActorComponent?>(target, out var actorComponent))
-                    {
-                        var userid = actorComponent.PlayerSession.UserId;
-                        targetcomp.NetParent = userid;
-                    }
-                }
+                        targetcomp.NetParent = actorComponent.PlayerSession.UserId;
+                    
                 targetcomp.Parent = target.Value;
             }
 
@@ -367,10 +359,10 @@ namespace Content.Server.Alien
             var target = args.Target;
 
             TryComp(uid, out BrainHuggingComponent? hugcomp);
+            
             if (hugcomp == null)
-            {
+                
                 return;
-            }
 
             _popup.PopupEntity(Loc.GetString("You start to feel bad, as if something is about to come out of you!"), target, target, PopupType.LargeCaution);
             _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, hugcomp.ReproduceTime, new ReproduceDoAfterEvent(), uid, target: target, used: uid)
@@ -383,10 +375,9 @@ namespace Content.Server.Alien
         private void ReproduceDoAfter(EntityUid uid, BrainHuggingComponent comp, ReproduceDoAfterEvent args)
         {
             var target = args.Target;
+            
             if (target == null)
-            {
                 return;
-            }
 
             _popup.PopupEntity(Loc.GetString("You start to feel bad, as if something is about to come out of you!"), target.Value, target.Value, PopupType.LargeCaution);
 
@@ -423,10 +414,9 @@ namespace Content.Server.Alien
         private void OnReleaseSlugAction(EntityUid uid, BrainHuggingComponent comp, ReleaseSlugActionEvent args)
         {
             TryComp(uid, out BrainSlugComponent? defcomp);
+            
             if (defcomp == null)
-            {
                 return;
-            }
 
             var target = defcomp.EquipedOn;
 
@@ -446,11 +436,8 @@ namespace Content.Server.Alien
             _container.Remove(uid, component.GuardianContainer);
 
             if (TryComp(args.Target, out SlugInsideComponent? slugcomp))
-            {
-                var target = args.Target;
-                if (target != null && slugcomp != null)
-                    _entityManager.RemoveComponent<SlugInsideComponent>(target.Value);
-            }
+                if (args.Target != null && slugcomp != null)
+                    _entityManager.RemoveComponent<SlugInsideComponent>(args.Target.Value);
             
             UpdateAbilities(uid, hugcomp, hugcomp.ReleaseSlugAction, false);
             
@@ -463,6 +450,8 @@ namespace Content.Server.Alien
             UpdateAbilities(uid, hugcomp, hugcomp.ReproduceAction, false);
             
             UpdateAbilities(uid, hugcomp, hugcomp.StoreSlugAction, false);
+            
+            UpdateAbilities(uid, hugcomp, hugcomp.BrainSlugJumpAction, true);
             
             foreach (var action in hugcomp.BaseActions)
                 UpdateAbilities(uid, hugcomp, action, true);
@@ -492,7 +481,6 @@ namespace Content.Server.Alien
                     if (TryComp(uid, out ActionsComponent? comp))
                     {
                         _actionsSystem.RemoveAction(uid, abilityUid, comp);
-                        _actionContainer.RemoveAction(abilityUid);
                         if (component.UnlockedAbilities.ContainsKey(actionId))
                             component.UnlockedAbilities.Remove(actionId);
                     }
