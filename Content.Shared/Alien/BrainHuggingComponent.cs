@@ -66,11 +66,9 @@ public sealed partial class BrainHuggingComponent : Component
     [ViewVariables(VVAccess.ReadOnly)]
     public List<EntProtoId> BaseActions = new()
     {
+        "ActionBrainSlugJump",
         "ActionBrainSlug"
     };
-    
-    [DataField("actionBrainSlugJump")]
-    public EntProtoId BrainSlugJumpAction = "ActionBrainSlugJump"; // jump
     
     [DataField("actionDominateVictim")]
     public EntProtoId DominateVictimAction = "ActionDominateVictim"; // stun

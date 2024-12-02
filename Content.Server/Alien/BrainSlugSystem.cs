@@ -90,14 +90,8 @@ namespace Content.Server.Alien
         {
             ChangeSlugGenesAmount(uid, 0, component);
             
-            UpdateAbilities(uid, component, component.BrainSlugJumpAction, true);
-            
             foreach (var action in component.BaseActions)
-            {
-                var actionEntity = _actionsSystem.AddAction(uid, action);
-                if (actionEntity != null && !component.UnlockedAbilities.ContainsKey(action))
-                    component.UnlockedAbilities.Add(action, actionEntity.Value);
-            }
+                UpdateAbilities(uid, component, action, false);
         }
 
 
@@ -220,7 +214,7 @@ namespace Content.Server.Alien
                 if (target == null)
                     return;
                 
-                if (!TryComp(uid, out BrainSlugComponent? defcomp)  || !HasComp<HumanoidAppearanceComponent>(target) || defcomp.GuardianContainer.Contains(uid))
+                if (!TryComp(uid, out BrainSlugComponent? defcomp)  || !HasComp<HumanoidAppearanceComponent>(target) || defcomp.GuardianContainer != null && defcomp.GuardianContainer.Contains(uid))
                     return;
                 
                 defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target.Value, "GuardianContainer");
@@ -241,19 +235,9 @@ namespace Content.Server.Alien
                 
                 UpdateAbilities(uid, component, component.StoreSlugAction, true);
                 
-                UpdateAbilities(uid, component, component.BrainSlugJumpAction, false);
                 
                 foreach (var action in component.BaseActions)
-                {
-                    if (component.UnlockedAbilities.ContainsKey(action) && component.UnlockedAbilities.TryGetValue(action, out var actionEntity))
-                    {
-                        _actionsSystem.RemoveAction(uid, actionEntity);
-                        component.UnlockedAbilities.Remove(action);
-                    }
-                }
-
-                _actionsSystem.AddAction(uid, component.StoreSlugAction);
-
+                    UpdateAbilities(uid, component, action, false);
 
                 if (TryComp(target, out MobStateComponent? mobState))
                 {
@@ -363,7 +347,6 @@ namespace Content.Server.Alien
             TryComp(uid, out BrainHuggingComponent? hugcomp);
             
             if (hugcomp == null)
-                
                 return;
 
             _popup.PopupEntity(Loc.GetString("You start to feel bad, as if something is about to come out of you!"), target, target, PopupType.LargeCaution);
@@ -453,8 +436,6 @@ namespace Content.Server.Alien
             
             UpdateAbilities(uid, hugcomp, hugcomp.StoreSlugAction, false);
             
-            UpdateAbilities(uid, hugcomp, hugcomp.BrainSlugJumpAction, true);
-            
             foreach (var action in hugcomp.BaseActions)
                 UpdateAbilities(uid, hugcomp, action, true);
         }
@@ -483,6 +464,8 @@ namespace Content.Server.Alien
                     if (TryComp(uid, out ActionsComponent? comp))
                     {
                         _actionsSystem.RemoveAction(uid, abilityUid, comp);
+                        if (abilityUid != null)
+                            _actionContainer.RemoveAction(abilityUid.Value);
                         if (component.UnlockedAbilities.ContainsKey(actionId))
                             component.UnlockedAbilities.Remove(actionId);
                     }
