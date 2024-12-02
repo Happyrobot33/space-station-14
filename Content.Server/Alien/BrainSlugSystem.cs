@@ -91,7 +91,7 @@ namespace Content.Server.Alien
             ChangeSlugGenesAmount(uid, 0, component);
             
             foreach (var action in component.BaseActions)
-                UpdateAbilities(uid, component, action, false);
+                UpdateAbilities(uid, component, action, true);
         }
 
 
