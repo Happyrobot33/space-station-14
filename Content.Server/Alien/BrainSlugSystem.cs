@@ -220,12 +220,14 @@ namespace Content.Server.Alien
                 if (target == null)
                     return;
                 
-                if (TryComp(target, out BrainSlugComponent? defcomp) && !defcomp.GuardianContainer.Contains(uid))
-                {
-                    defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target.Value, "GuardianContainer");
+                if (!TryComp(uid, out BrainSlugComponent? defcomp)  || !HasComp<HumanoidAppearanceComponent>(target) || defcomp.GuardianContainer.Contains(uid))
+                    return;
                 
-                    _container.Insert(uid, defcomp.GuardianContainer);
-                }
+                defcomp.GuardianContainer = _container.EnsureContainer<ContainerSlot>(target.Value, "GuardianContainer");
+                
+                _container.Insert(uid, defcomp.GuardianContainer);
+                
+                defcomp.EquipedOn = target.Value;
                 
                 UpdateAbilities(uid, component, component.DominateVictimAction, true);
                 
