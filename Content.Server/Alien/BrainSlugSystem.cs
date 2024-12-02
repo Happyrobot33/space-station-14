@@ -42,6 +42,7 @@ namespace Content.Server.Alien
         [Dependency] private readonly SharedAudioSystem _audioSystem = default!;
         [Dependency] private readonly SharedDoAfterSystem _doAfterSystem = default!;
         [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
+        [Dependency] private readonly ActionContainerSystem _actionContainer = default!;
         [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
         [Dependency] private readonly ChatSystem _chat = default!;
         [Dependency] private readonly IEntityManager _entityManager = default!;
@@ -491,6 +492,7 @@ namespace Content.Server.Alien
                     if (TryComp(uid, out ActionsComponent? comp))
                     {
                         _actionsSystem.RemoveAction(uid, abilityUid, comp);
+                        _actionContainer.RemoveAction(abilityUid);
                         if (component.UnlockedAbilities.ContainsKey(actionId))
                             component.UnlockedAbilities.Remove(actionId);
                     }
