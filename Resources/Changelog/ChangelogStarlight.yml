@@ -763,4 +763,32 @@ Entries:
   id: 108
   time: '2024-12-02T04:52:07.000000+00:00'
   url: https://github.com/ss14Starlight/space-station-14/pull/106
+- author: Miracula
+  changes:
+  - message: Added vulpkanins
+    type: Add
+  id: 109
+  time: '2024-12-03T13:22:19.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/92
+- author: Miracula
+  changes:
+  - message: Fix mentor system not allowing mentors to use it properly
+    type: Fix
+  id: 110
+  time: '2024-12-04T07:36:40.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/113
+- author: Miracula
+  changes:
+  - message: Vulpkanins now have survival box.
+    type: Fix
+  id: 111
+  time: '2024-12-04T16:00:19.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/117
+- author: Rinary
+  changes:
+  - message: Added clown's vending machine.
+    type: Add
+  id: 112
+  time: '2024-12-05T07:06:05.000000+00:00'
+  url: https://github.com/ss14Starlight/space-station-14/pull/118
 
