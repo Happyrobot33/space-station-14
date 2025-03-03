@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Client.Alerts;
 using Content.Client.UserInterface.Systems.Alerts.Controls;
+using Content.Shared._Starlight.Antags.Cults.Clockwork;
 using Content.Shared.StatusIcon;
 using Content.Shared.StatusIcon.Components;
 using Content.Shared.Vampire;
@@ -18,10 +19,24 @@ public sealed class VampireSystem : EntitySystem
     {
         base.Initialize();
 
+        SubscribeLocalEvent<ClockworkCultistComponent, GetStatusIconsEvent>(GetVampireIcon);
+        SubscribeLocalEvent<ClockworkMasterComponent, GetStatusIconsEvent>(GetVampireIcon);
         SubscribeLocalEvent<VampireIconComponent, GetStatusIconsEvent>(GetVampireIcon);
         SubscribeLocalEvent<VampireAlertComponent, UpdateAlertSpriteEvent>(OnUpdateAlert);
     }
-    
+
+    private void GetVampireIcon(Entity<ClockworkCultistComponent> ent, ref GetStatusIconsEvent args)
+    {
+        var iconPrototype = _prototype.Index(ent.Comp.StatusIcon);
+        args.StatusIcons.Add(iconPrototype);
+    }
+
+    private void GetVampireIcon(Entity<ClockworkMasterComponent> ent, ref GetStatusIconsEvent args)
+    {
+        var iconPrototype = _prototype.Index(ent.Comp.StatusIcon);
+        args.StatusIcons.Add(iconPrototype);
+    }
+
     private void GetVampireIcon(EntityUid uid, VampireIconComponent component, ref GetStatusIconsEvent args)
     {
         var iconPrototype = _prototype.Index(component.StatusIcon);

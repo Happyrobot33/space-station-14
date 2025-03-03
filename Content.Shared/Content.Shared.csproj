@@ -24,6 +24,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="_Starlight\Antags\Vampire\" />
     <Folder Include="_Starlight\Movement\" />
     <Folder Include="Power\Components\" />
     <Folder Include="_Starlight\Spells\" />

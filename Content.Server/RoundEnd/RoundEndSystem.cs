@@ -393,6 +393,11 @@ namespace Content.Server.RoundEnd
         /// </summary>
         ShuttleCall,
 
+        /// <summary> 🌟Starlight🌟
+        /// End round
+        /// </summary>
+        DelayedEnd,
+
         /// <summary>
         /// Do nothing
         /// </summary>

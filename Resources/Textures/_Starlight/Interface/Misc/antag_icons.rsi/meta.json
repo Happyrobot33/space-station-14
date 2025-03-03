@@ -1,0 +1,36 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-4.0",
+    "copyright": "Starlight",
+
+    "size": {
+        "x": 9,
+        "y": 9
+    },
+    "states": [
+        {
+            "name": "clockwork",
+            "delays": [
+              [
+                0.35,
+                0.35,
+                0.35,
+                0.35,
+                0.35
+              ]
+            ]
+        },
+        {
+            "name": "clockwork-master",
+            "delays": [
+              [
+                0.35,
+                0.35,
+                0.35,
+                0.35,
+                0.35
+              ]
+            ]
+        }
+    ]
+}
