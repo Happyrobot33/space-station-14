@@ -367,6 +367,11 @@ namespace Content.Server.Database
         Task SendNotification(DatabaseNotification notification);
 
         #endregion
+
+        //starlight
+        Task<int> AddAutoModRule(string regex, int severity, string? message, int count, bool cancelspeech);
+        Task<List<AutoModRule>> GetAutoModRules();
+        //end starlight
     }
 
     /// <summary>
