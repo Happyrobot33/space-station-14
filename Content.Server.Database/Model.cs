@@ -1347,14 +1347,14 @@ namespace Content.Server.Database
         public float Score { get; set; }
     }
 
-    public sealed class AutoModRule
+    public class AutoModRule
     {
         [Required, Key] public int Id { get; set; }
-        public string? Regex { get; set; } = null;
-        public int Severity { get; set; } = 0;
-        public string? Message { get; set; } = null;
-        public int Count { get; set; } = 0;
-        public bool IsEnabled { get; set; } = true;
-        public bool CancelSpeech { get; set; } = false;
+        public string? Regex { get; set; }
+        public int Severity { get; set; }
+        public string? Message { get; set; }
+        public int Count { get; set; }
+        public bool IsEnabled { get; set; }
+        public bool CancelSpeech { get; set; }
     }
 }
