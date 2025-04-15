@@ -1875,5 +1875,34 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         {
 
         }
+
+        //starlight start
+        public async Task<bool> AddAutoModRule(AutoModRule rule)
+        {
+            await using var db = await GetDb();
+            var exists = await db.DbContext.AutoModRules
+                .Where(w => w.Id == rule.Id)
+                .AnyAsync();
+
+            if (exists)
+                return false;
+
+            db.DbContext.AutoModRules.Add(rule);
+            await db.DbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<AutoModRule>> GetAutoModRules()
+        {
+            await using var db = await GetDb();
+            return await db.DbContext.AutoModRules.ToListAsync();
+        }
+
+        public async Task<int> GetAutoModRuleCount()
+        {
+            await using var db = await GetDb();
+            return await db.DbContext.AutoModRules.CountAsync();
+        }
+        //starlight end
     }
 }
