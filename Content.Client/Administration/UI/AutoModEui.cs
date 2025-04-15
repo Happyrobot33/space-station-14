@@ -15,6 +15,7 @@ using Robust.Shared.IoC;
 using Robust.Shared.Localization;
 using Robust.Shared.Maths;
 using Robust.Shared.Utility;
+using static Content.Shared.Administration.AutoModEuiState;
 using static Content.Shared.Administration.PermissionsEuiMsg;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 
@@ -45,15 +46,28 @@ namespace Content.Client.Administration.UI
         public override void HandleState(EuiStateBase state)
         {
             var s = (AutoModEuiState)state;
-        
-            //remove all the children that arent a vscrollbar
-            foreach (var child in _menu.RulesList.Children.ToList())
+
+            var data = s.Rules.Select(rule => new AutoModListData(rule)).ToList();
+            
+            _menu.RulesList.GenerateItem = GenerateItem;
+            _menu.RulesList.PopulateList(data);
+        }
+
+        private void GenerateItem(ListData data, ListContainerButton button)
+        {
+            var rule = (AutoModListData)data;
+            
+            var box = new BoxContainer() { Orientation = LayoutOrientation.Horizontal, HorizontalExpand = true };
+            //text entry
+            var regex = new LineEdit()
             {
-                if (child is not VScrollBar)
-                {
-                    _menu.RulesList.RemoveChild(child);
-                }
-            }
+                Text = rule.rule.Message ?? string.Empty,
+                HorizontalExpand = true,
+                VerticalExpand = true,
+            };
+
+            box.AddChild(regex);
+            button.AddChild(box);
         }
 
         private sealed class Menu : DefaultWindow
@@ -86,6 +100,6 @@ namespace Content.Client.Administration.UI
             protected override Vector2 ContentsMinimumSize => new Vector2(600, 400);
         }
 
-       public record AutoModListData() : ListData;
+       internal record AutoModListData(AutoModRule rule) : ListData;
     }
 }
