@@ -9,6 +9,7 @@ using Robust.Server.Player;
 using Robust.Shared.Network;
 using DbAdminRank = Content.Server.Database.AdminRank;
 using static Content.Shared.Administration.PermissionsEuiMsg;
+using static Content.Shared.Administration.AutoModEuiMsg;
 
 
 namespace Content.Server.Administration.UI
@@ -43,20 +44,37 @@ namespace Content.Server.Administration.UI
             StateDirty();
         }
 
+        public async void DeleteRule(AutoModRule rule)
+        {
+            //delete the rule from the database
+            await _db.DeleteAutoModRule(rule.Id);
+
+            //remove the rule from the list
+            _rules.Remove(rule);
+
+            StateDirty();
+        }
+
+        //message handler
+        public override void HandleMessage(EuiMessageBase message)
+        {
+            base.HandleMessage(message);
+
+            switch (message)
+            {
+                case DeleteRuleRequest msg:
+                    DeleteRule(msg.Rule);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(message), message, null);
+            }
+        }
+
         public override EuiStateBase GetNewState()
         {
             return new AutoModEuiState()
             {
-                Rules = _rules.Select(x => new AutoModEuiState.AutoModRule()
-                {
-                    Id = x.Id,
-                    Regex = x.Regex,
-                    Severity = x.Severity,
-                    Message = x.Message,
-                    Count = x.Count,
-                    IsEnabled = x.IsEnabled,
-                    CancelSpeech = x.CancelSpeech
-                }).ToList()
+                Rules = _rules,
             };
         }
     }

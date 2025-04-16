@@ -10,6 +10,7 @@ using System.Text.Json;
 using Content.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
+using Content.Shared.Administration;
 
 namespace Content.Server.Database
 {
@@ -1345,16 +1346,5 @@ namespace Content.Server.Database
         /// The score IPIntel returned
         /// </summary>
         public float Score { get; set; }
-    }
-
-    public class AutoModRule
-    {
-        [Required, Key] public int Id { get; set; }
-        public string? Regex { get; set; }
-        public int Severity { get; set; }
-        public string? Message { get; set; }
-        public int Count { get; set; }
-        public bool IsEnabled { get; set; }
-        public bool CancelSpeech { get; set; }
     }
 }

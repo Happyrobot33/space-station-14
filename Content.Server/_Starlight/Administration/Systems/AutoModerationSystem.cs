@@ -1,4 +1,5 @@
 using Content.Server.Database;
+using Content.Shared.Administration;
 using Content.Shared.Emoting;
 using Content.Shared.Speech;
 
@@ -15,13 +16,9 @@ public sealed partial class AutoModerationSystem : EntitySystem
     //watch for chat messages
     private async void OnSpeakAttempt(SpeakAttemptEvent args)
     {
-        //get the automod rules
-        int count = await _db.GetAutoModRuleCount();
-
         //make a generic testing rule
         var rule = new AutoModRule()
         {
-            Id = count + 1,
             Message = "test",
         };
         await _db.AddAutoModRule(rule);

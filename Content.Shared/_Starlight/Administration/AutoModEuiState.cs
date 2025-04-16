@@ -9,16 +9,18 @@ namespace Content.Shared.Administration
     public sealed class AutoModEuiState : EuiStateBase
     {
         public List<AutoModRule> Rules = new();
+    }
+
+    public static class AutoModEuiMsg
+    {
         [Serializable, NetSerializable]
-        public struct AutoModRule
+        public sealed class DeleteRuleRequest : EuiMessageBase
         {
-            public int Id { get; set; }
-            public string? Regex { get; set; }
-            public int Severity { get; set; }
-            public string? Message { get; set; }
-            public int Count { get; set; }
-            public bool IsEnabled { get; set; }
-            public bool CancelSpeech { get; set; }
+            public AutoModRule Rule { get; set; }
+            public DeleteRuleRequest(AutoModRule rule)
+            {
+                Rule = rule;
+            }
         }
     }
 }

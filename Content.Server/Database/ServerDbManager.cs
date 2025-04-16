@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Content.Server.Administration.Logs;
 using Content.Server.Starlight.Administration.Systems;
+using Content.Shared.Administration;
 using Content.Shared.Administration.Logs;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
@@ -1231,12 +1232,14 @@ namespace Content.Server.Database
 
         public Task<bool> UpdateAutoModRule(AutoModRule rule)
         {
-            throw new NotImplementedException();
+            DbWriteOpsMetric.Inc();
+            return RunDbCommand(() => _db.UpdateAutoModRule(rule));
         }
 
         public Task<bool> DeleteAutoModRule(int id)
         {
-            throw new NotImplementedException();
+            DbWriteOpsMetric.Inc();
+            return RunDbCommand(() => _db.DeleteAutoModRule(id));
         }
 
         public Task<List<AutoModRule>> GetAutoModRules()

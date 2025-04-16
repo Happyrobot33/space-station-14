@@ -1881,12 +1881,6 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         public async Task<bool> AddAutoModRule(AutoModRule rule)
         {
             await using var db = await GetDb();
-            var exists = await db.DbContext.AutoModRules
-                .Where(w => w.Id == rule.Id)
-                .AnyAsync();
-
-            if (exists)
-                return false;
 
             db.DbContext.AutoModRules.Add(rule);
             await db.DbContext.SaveChangesAsync();
@@ -1903,6 +1897,38 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         {
             await using var db = await GetDb();
             return await db.DbContext.AutoModRules.CountAsync();
+        }
+
+        public async Task<bool> DeleteAutoModRule(int id)
+        {
+            await using var db = await GetDb();
+
+            var rule = await db.DbContext.AutoModRules.SingleOrDefaultAsync(r => r.Id == id);
+            if (rule == null)
+                return false;
+
+            db.DbContext.AutoModRules.Remove(rule);
+            await db.DbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateAutoModRule(AutoModRule rule)
+        {
+            await using var db = await GetDb();
+
+            var existingRule = await db.DbContext.AutoModRules.SingleOrDefaultAsync(r => r.Id == rule.Id);
+            if (existingRule == null)
+                return false;
+
+            existingRule.Regex = rule.Regex;
+            existingRule.Severity = rule.Severity;
+            existingRule.Message = rule.Message;
+            existingRule.Count = rule.Count;
+            existingRule.IsEnabled = rule.IsEnabled;
+            existingRule.CancelSpeech = rule.CancelSpeech;
+
+            await db.DbContext.SaveChangesAsync();
+            return true;
         }
         //starlight end
     }
