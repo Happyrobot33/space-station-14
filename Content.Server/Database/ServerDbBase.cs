@@ -1924,7 +1924,7 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
             existingRule.Severity = rule.Severity;
             existingRule.Message = rule.Message;
             existingRule.Count = rule.Count;
-            existingRule.IsEnabled = rule.IsEnabled;
+            existingRule.Enabled = rule.Enabled;
             existingRule.CancelSpeech = rule.CancelSpeech;
 
             await db.DbContext.SaveChangesAsync();

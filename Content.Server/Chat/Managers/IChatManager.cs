@@ -36,6 +36,8 @@ namespace Content.Server.Chat.Managers
 
         bool MessageCharacterLimit(ICommonSession player, string message);
 
+        bool MessageCancelCheck(ICommonSession? player, string message);
+
         void DeleteMessagesBy(NetUserId uid);
 
         [return: NotNullIfNotNull(nameof(author))]

@@ -378,6 +378,12 @@ namespace Content.Server.Database
             modelBuilder.Entity<AutoModRule>()
                 .HasIndex(p => p.Id)
                 .IsUnique();
+            
+            modelBuilder.Entity<AutoModRule>()
+                .Property(p => p.Regex);
+            
+            modelBuilder.Entity<AutoModRule>()
+                .Property(p => p.Message);
         }
 
         public virtual IQueryable<AdminLog> SearchLogs(IQueryable<AdminLog> query, string searchText)

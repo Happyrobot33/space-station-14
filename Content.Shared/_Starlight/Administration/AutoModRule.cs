@@ -6,11 +6,11 @@ namespace Content.Shared.Administration
     public sealed class AutoModRule
     {
         public int Id { get; set; }
-        public string? Regex { get; set; }
+        public string Regex = string.Empty;
         public AutoModSeverity Severity { get; set; }
-        public string? Message { get; set; }
+        public string Message = string.Empty;
         public int Count { get; set; }
-        public bool IsEnabled { get; set; }
+        public bool Enabled { get; set; }
         public bool CancelSpeech { get; set; }
     }
 

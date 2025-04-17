@@ -98,7 +98,7 @@ namespace Content.Client.Administration.UI
 
             var enabled = new CheckBox()
             {
-                Pressed = rule.rule.IsEnabled,
+                Pressed = rule.rule.Enabled,
                 HorizontalExpand = true,
                 VerticalExpand = true,
                 Text = Loc.GetString("automod-enabled"),
