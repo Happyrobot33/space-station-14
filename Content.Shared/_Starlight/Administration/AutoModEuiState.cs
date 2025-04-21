@@ -32,5 +32,30 @@ namespace Content.Shared.Administration
                 Rule = rule;
             }
         }
+
+        [Serializable, NetSerializable]
+        public sealed class UpdateRuleRequest : EuiMessageBase
+        {
+            public AutoModRule Rule { get; set; }
+            public UpdateRuleRequest(AutoModRule rule)
+            {
+                Rule = rule;
+            }
+        }
+
+        [Serializable, NetSerializable]
+        public sealed class BulkUpdateRulesRequest : EuiMessageBase
+        {
+            public List<AutoModRule> Rules { get; set; }
+            public BulkUpdateRulesRequest(List<AutoModRule> rules)
+            {
+                Rules = rules;
+            }
+        }
+
+        [Serializable, NetSerializable]
+        public sealed class RefreshRequest : EuiMessageBase
+        {
+        }
     }
 }

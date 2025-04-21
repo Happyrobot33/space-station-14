@@ -26,12 +26,34 @@ namespace Content.Client.Administration.UI
     public sealed class AutoModEui : BaseEui
     {
         private readonly Menu _menu;
+        private AutoModEuiState recentState = default!;
         public AutoModEui()
         {
             IoCManager.InjectDependencies(this);
 
             _menu = new Menu(this);
             _menu.RulesList.GenerateItem = GenerateItem;
+
+            _menu.refresh.OnPressed += args =>
+            {
+                SendMessage(new RefreshRequest());
+            };
+
+            _menu.addRuleButton.OnPressed += args =>
+            {
+                //make a blank rule
+                var rule = new AutoModRule();
+                //ENSURE the rule starts off
+                rule.Enabled = false;
+                //send message to add rule
+                SendMessage(new AddRuleRequest(rule));
+            };
+
+            _menu.saveAllButton.OnPressed += args =>
+            {
+                //send message to save all rules
+                SendMessage(new BulkUpdateRulesRequest(recentState.Rules));
+            };
         }
         public override void Closed()
         {
@@ -48,11 +70,14 @@ namespace Content.Client.Administration.UI
         public override void HandleState(EuiStateBase state)
         {
             base.HandleState(state);
+            
+            recentState = (AutoModEuiState)state;
 
-            var s = (AutoModEuiState)state;
+            //ensure that there is actually a state to use
+            if (recentState == null)
+                return;
 
-            var data = s.Rules.Select(rule => new AutoModListData(rule)).ToList();
-
+            var data = recentState.Rules.Select(rule => new AutoModListData(rule)).ToList();
             _menu.RulesList.PopulateList(data);
         }
 
@@ -74,6 +99,12 @@ namespace Content.Client.Administration.UI
                 HorizontalExpand = true,
                 VerticalExpand = true,
             };
+            regex.OnTextChanged += args =>
+            {
+                //set the regex of the rule
+                rule.rule.Regex = regex.Text;
+            };
+
             var severityDropdown = new OptionButton()
             {
                 HorizontalExpand = true,
@@ -83,12 +114,24 @@ namespace Content.Client.Administration.UI
             {
                 severityDropdown.AddItem(Loc.GetString($"automod-severity-{severity.ToString().ToLower()}"), (int)severity);
             }
+            severityDropdown.SelectId((int)rule.rule.Severity); //set the selected item to the current severity
+            severityDropdown.OnItemSelected += args =>
+            {
+                severityDropdown.SelectId(args.Id); //very weird that I have to manually do this....
+                //set the severity of the rule
+                rule.rule.Severity = (AutoModSeverity)args.Id;
+            };
 
             var message = new LineEdit()
             {
                 Text = rule.rule.Message ?? string.Empty,
                 HorizontalExpand = true,
                 VerticalExpand = true,
+            };
+            message.OnTextChanged += args =>
+            {
+                //set the message of the rule
+                rule.rule.Message = message.Text;
             };
 
             //disabled for now, needs more database work to be useful
@@ -106,6 +149,11 @@ namespace Content.Client.Administration.UI
                 VerticalExpand = true,
                 Text = Loc.GetString("automod-enabled"),
             };
+            enabled.OnToggled += args =>
+            {
+                //set the enabled state of the rule
+                rule.rule.Enabled = enabled.Pressed;
+            };
 
             var cancel = new CheckBox()
             {
@@ -113,6 +161,11 @@ namespace Content.Client.Administration.UI
                 HorizontalExpand = true,
                 VerticalExpand = true,
                 Text = Loc.GetString("automod-cancel-speech"),
+            };
+            cancel.OnToggled += args =>
+            {
+                //set the cancel speech state of the rule
+                rule.rule.CancelSpeech = cancel.Pressed;
             };
 
             var deleteButton = new Button()
@@ -141,6 +194,9 @@ namespace Content.Client.Administration.UI
         {
             private readonly AutoModEui _ui;
             public ListContainer RulesList { get; }
+            public Button refresh { get; }
+            public Button addRuleButton { get; }
+            public Button saveAllButton { get; }
             public Menu(AutoModEui ui)
             {
                 _ui = ui;
@@ -162,22 +218,37 @@ namespace Content.Client.Administration.UI
                 };
                 tabs.AddChild(rulesVBox);
 
-                //add a row at the bottom of the window for adding new rules
-                var addRuleButton = new Button
+                var rulesLowerBarBox = new BoxContainer
+                {
+                    Orientation = LayoutOrientation.Horizontal,
+                    HorizontalExpand = true,
+                };
+                //add a row at the bottom of the window for various controls
+                addRuleButton = new Button
                 {
                     Text = Loc.GetString("automod-add-rule"),
                     HorizontalExpand = true,
                 };
-                addRuleButton.OnPressed += args =>
+                rulesLowerBarBox.AddChild(addRuleButton);
+
+                //refresh button
+                refresh = new Button
                 {
-                    //make a blank rule
-                    var rule = new AutoModRule();
-                    //ENSURE the rule starts off
-                    rule.Enabled = false;
-                    //send message to add rule
-                    _ui.SendMessage(new AddRuleRequest(rule));
+                    Text = Loc.GetString("automod-refresh"),
+                    HorizontalExpand = true,
                 };
-                rulesVBox.AddChild(addRuleButton);
+                rulesLowerBarBox.AddChild(refresh);
+
+                //save all button
+                saveAllButton = new Button
+                {
+                    Text = Loc.GetString("automod-save-all"),
+                    HorizontalExpand = true,
+                };
+                rulesLowerBarBox.AddChild(saveAllButton);
+
+                //add the row to the bottom of the window
+                rulesVBox.AddChild(rulesLowerBarBox);
 
 
                 var testerVBox = new BoxContainer

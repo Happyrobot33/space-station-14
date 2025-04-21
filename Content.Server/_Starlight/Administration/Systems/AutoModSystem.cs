@@ -21,12 +21,25 @@ public sealed partial class AutoModSystem : SharedChatSystem
     [Dependency] private readonly IPlayerManager _player = default!;
     private readonly ISawmill _automodLog = Logger.GetSawmill("automod");
 
+    public const string NotificationChannel = "automod_rules";
+
     //cache the rules list
     private List<AutoModRule> _rules = new();
     public override void Initialize()
     {
         base.Initialize();
         SubscribeLocalEvent<ChatAttemptEvent>(OnChatAttempt);
+
+        _db.SubscribeToNotifications(notification =>
+        {
+            //check if the notification is for the automod rules
+            if (notification.Channel == NotificationChannel)
+            {
+                //update the cache
+                _automodLog.Info($"AutoModSystem received notification. Updating cache.");
+                UpdateCache();
+            }
+        });
 
         //TODO: Make our cache update automatically somehow. For now this works
         //but this will need to be fixed for runtime changes
@@ -89,6 +102,3 @@ public sealed partial class AutoModSystem : SharedChatSystem
         }
     }
 }
-
-//automod rule class
-

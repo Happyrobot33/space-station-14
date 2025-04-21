@@ -60,6 +60,25 @@ namespace Content.Server.Administration.UI
             LoadFromDb();
         }
 
+        public async void UpdateRule(AutoModRule rule)
+        {
+            //update the rule in the database
+            await _db.UpdateAutoModRule(rule);
+
+            LoadFromDb();
+        }
+
+        public async void BulkUpdateRules(List<AutoModRule> rules)
+        {
+            //update all rules in the database
+            foreach (var rule in rules)
+            {
+                await _db.UpdateAutoModRule(rule);
+            }
+
+            LoadFromDb();
+        }
+
         //message handler
         public override void HandleMessage(EuiMessageBase message)
         {
@@ -72,6 +91,15 @@ namespace Content.Server.Administration.UI
                     break;
                 case AddRuleRequest msg:
                     AddRule(msg.Rule);
+                    break;
+                case UpdateRuleRequest msg:
+                    UpdateRule(msg.Rule);
+                    break;
+                case RefreshRequest msg:
+                    LoadFromDb();
+                    break;
+                case BulkUpdateRulesRequest msg:
+                    BulkUpdateRules(msg.Rules);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(message), message, null);

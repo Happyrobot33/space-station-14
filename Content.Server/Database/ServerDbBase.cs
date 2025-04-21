@@ -22,6 +22,7 @@ using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 using Content.Shared.Administration;
+using Content.Server.Starlight.Chat.Systems;
 
 namespace Content.Server.Database
 {
@@ -1878,12 +1879,23 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         }
 
         //starlight start
+        //generator for DB notification
+        public void SendAutoModNotification()
+        {
+            var notif = new DatabaseNotification
+            {
+                Channel = AutoModSystem.NotificationChannel
+            };
+
+            SendNotification(notif);
+        }
         public async Task<bool> AddAutoModRule(AutoModRule rule)
         {
             await using var db = await GetDb();
 
             db.DbContext.AutoModRules.Add(rule);
             await db.DbContext.SaveChangesAsync();
+            SendAutoModNotification();
             return true;
         }
 
@@ -1909,6 +1921,7 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
 
             db.DbContext.AutoModRules.Remove(rule);
             await db.DbContext.SaveChangesAsync();
+            SendAutoModNotification();
             return true;
         }
 
@@ -1916,9 +1929,15 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
         {
             await using var db = await GetDb();
 
+            //debug message
+            _opsLog.Info($"Updating AutoMod rule: {rule.Id}");
+
             var existingRule = await db.DbContext.AutoModRules.SingleOrDefaultAsync(r => r.Id == rule.Id);
             if (existingRule == null)
+            {
+                _opsLog.Error($"AutoMod rule {rule.Id} not found in database.");
                 return false;
+            }
 
             existingRule.Regex = rule.Regex;
             existingRule.Severity = rule.Severity;
@@ -1928,6 +1947,7 @@ INSERT INTO player_round (players_id, rounds_id) VALUES ({players[player]}, {id}
             existingRule.CancelSpeech = rule.CancelSpeech;
 
             await db.DbContext.SaveChangesAsync();
+            SendAutoModNotification();
             return true;
         }
         //starlight end
