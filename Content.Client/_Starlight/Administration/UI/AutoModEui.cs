@@ -54,17 +54,19 @@ namespace Content.Client.Administration.UI
             
             _menu.RulesList.GenerateItem = GenerateItem;
             _menu.RulesList.PopulateList(data);
-            _menu.refresh.OnPressed += args =>
-            {
-                _menu.RulesList.PopulateList(data);
-            };
         }
 
         private void GenerateItem(ListData data, ListContainerButton button)
         {
             var rule = (AutoModListData)data;
             
-            var box = new BoxContainer() { Orientation = LayoutOrientation.Horizontal, HorizontalExpand = true };
+            var ItemBox = new BoxContainer() { Orientation = LayoutOrientation.Vertical, VerticalExpand = true };
+            var TopRow = new BoxContainer() { Orientation = LayoutOrientation.Horizontal, HorizontalExpand = true };
+            var BottomRow = new BoxContainer() { Orientation = LayoutOrientation.Horizontal, HorizontalExpand = true };
+            
+            ItemBox.AddChild(TopRow);
+            ItemBox.AddChild(BottomRow);
+
             //text entry
             var regex = new LineEdit()
             {
@@ -89,12 +91,13 @@ namespace Content.Client.Administration.UI
                 VerticalExpand = true,
             };
 
-            var count = new LineEdit()
+            //disabled for now, needs more database work to be useful
+            /* var count = new LineEdit()
             {
                 Text = rule.rule.Count.ToString(),
                 HorizontalExpand = true,
                 VerticalExpand = true,
-            };
+            }; */
 
             var enabled = new CheckBox()
             {
@@ -124,27 +127,27 @@ namespace Content.Client.Administration.UI
                 SendMessage(new DeleteRuleRequest(rule.rule));
             };
 
-            box.AddChild(regex);
-            box.AddChild(severityDropdown);
-            box.AddChild(message);
-            box.AddChild(count);
-            box.AddChild(enabled);
-            box.AddChild(cancel);
-            box.AddChild(deleteButton);
-            button.AddChild(box);
+            TopRow.AddChild(regex);
+            TopRow.AddChild(message);
+            BottomRow.AddChild(severityDropdown);
+            /* BottomRow.AddChild(count); */
+            BottomRow.AddChild(enabled);
+            BottomRow.AddChild(cancel);
+            BottomRow.AddChild(deleteButton);
+            button.AddChild(ItemBox);
         }
 
         private sealed class Menu : DefaultWindow
         {
             private readonly AutoModEui _ui;
             public ListContainer RulesList { get; }
-            public Button refresh { get; }
             public Menu(AutoModEui ui)
             {
                 _ui = ui;
-                Title = Loc.GetString("auto-mod-eui-menu-title");
+                Title = Loc.GetString("automod-eui-menu-title");
 
-                var tab = new TabContainer();
+                var tabs = new TabContainer();
+
                 RulesList = new ListContainer
                 {
                     HorizontalExpand = true,
@@ -157,17 +160,32 @@ namespace Content.Client.Administration.UI
                         RulesList
                     }
                 };
-                tab.AddChild(rulesVBox);
-                refresh = new Button
+                tabs.AddChild(rulesVBox);
+
+
+
+
+                var testerVBox = new BoxContainer
+                {
+                    Orientation = LayoutOrientation.Vertical,
+                    HorizontalExpand = true,
+                    VerticalExpand = true,
+                };
+
+                tabs.AddChild(testerVBox);
+                /* refresh = new Button
                 {
                     Text = Loc.GetString("automod-refresh"),
                     HorizontalExpand = true,
                     VerticalExpand = true,
                 };
 
-                rulesVBox.AddChild(refresh);
+                rulesVBox.AddChild(refresh); */
 
-                Contents.AddChild(tab);
+                tabs.SetTabTitle(0, Loc.GetString("automod-eui-menu-rules-tab-title"));
+                tabs.SetTabTitle(1, Loc.GetString("automod-eui-menu-tester-tab-title"));
+
+                Contents.AddChild(tabs);
             }
 
             protected override Vector2 ContentsMinimumSize => new Vector2(600, 400);
