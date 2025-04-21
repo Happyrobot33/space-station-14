@@ -49,10 +49,15 @@ namespace Content.Server.Administration.UI
             //delete the rule from the database
             await _db.DeleteAutoModRule(rule.Id);
 
-            //remove the rule from the list
-            _rules.Remove(rule);
+            LoadFromDb();
+        }
 
-            StateDirty();
+        public async void AddRule(AutoModRule rule)
+        {
+            //add the rule to the database
+            await _db.AddAutoModRule(rule);
+
+            LoadFromDb();
         }
 
         //message handler
@@ -64,6 +69,9 @@ namespace Content.Server.Administration.UI
             {
                 case DeleteRuleRequest msg:
                     DeleteRule(msg.Rule);
+                    break;
+                case AddRuleRequest msg:
+                    AddRule(msg.Rule);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(message), message, null);

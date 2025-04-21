@@ -22,5 +22,15 @@ namespace Content.Shared.Administration
                 Rule = rule;
             }
         }
+
+        [Serializable, NetSerializable]
+        public sealed class AddRuleRequest : EuiMessageBase
+        {
+            public AutoModRule Rule { get; set; }
+            public AddRuleRequest(AutoModRule rule)
+            {
+                Rule = rule;
+            }
+        }
     }
 }

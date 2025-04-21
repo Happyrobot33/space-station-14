@@ -31,6 +31,7 @@ namespace Content.Client.Administration.UI
             IoCManager.InjectDependencies(this);
 
             _menu = new Menu(this);
+            _menu.RulesList.GenerateItem = GenerateItem;
         }
         public override void Closed()
         {
@@ -51,8 +52,7 @@ namespace Content.Client.Administration.UI
             var s = (AutoModEuiState)state;
 
             var data = s.Rules.Select(rule => new AutoModListData(rule)).ToList();
-            
-            _menu.RulesList.GenerateItem = GenerateItem;
+
             _menu.RulesList.PopulateList(data);
         }
 
@@ -117,7 +117,7 @@ namespace Content.Client.Administration.UI
 
             var deleteButton = new Button()
             {
-                Text = Loc.GetString("automod-delete"),
+                Text = Loc.GetString("automod-delete-rule"),
                 HorizontalExpand = true,
                 VerticalExpand = true,
             };
@@ -162,7 +162,22 @@ namespace Content.Client.Administration.UI
                 };
                 tabs.AddChild(rulesVBox);
 
-
+                //add a row at the bottom of the window for adding new rules
+                var addRuleButton = new Button
+                {
+                    Text = Loc.GetString("automod-add-rule"),
+                    HorizontalExpand = true,
+                };
+                addRuleButton.OnPressed += args =>
+                {
+                    //make a blank rule
+                    var rule = new AutoModRule();
+                    //ENSURE the rule starts off
+                    rule.Enabled = false;
+                    //send message to add rule
+                    _ui.SendMessage(new AddRuleRequest(rule));
+                };
+                rulesVBox.AddChild(addRuleButton);
 
 
                 var testerVBox = new BoxContainer

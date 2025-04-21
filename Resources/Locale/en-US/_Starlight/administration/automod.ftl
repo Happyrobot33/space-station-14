@@ -5,7 +5,8 @@ automod-severity-ban = Ban
 
 automod-enabled = Enabled
 automod-cancel-speech = Cancel Chat Message
-automod-delete = Delete Rule
+automod-delete-rule = Delete Rule
+automod-add-rule = Add New Rule
 automod-eui-menu-title = Auto Mod
 automod-eui-menu-rules-tab-title = Rules
 automod-eui-menu-tester-tab-title = Rule Tester
