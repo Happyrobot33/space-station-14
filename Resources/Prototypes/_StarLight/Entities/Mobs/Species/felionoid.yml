@@ -5,8 +5,8 @@
   components:
   - type: Absorbable
   - type: MovementSpeedModifier
-    speciesSprintSpeedModifier: 1.25
-    speciesWalkSpeedModifier: 1.00
+    speciesSprintSpeedModifier: 1.00
+    speciesWalkSpeedModifier: 1.25
   - type: Speech
     speechVerb: Felionoid
     allowedEmotes: ['Mew', 'Hisses', 'Meow', 'Growl', 'Purr', 'Trill']
