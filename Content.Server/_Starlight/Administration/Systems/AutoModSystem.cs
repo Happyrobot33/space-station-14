@@ -84,19 +84,29 @@ public sealed partial class AutoModSystem : SharedChatSystem
                     args.Cancel();
                 }
 
-                //if there is a message defined, show it in a popup
-                if (!string.IsNullOrEmpty(rule.Message))
+                switch (rule.Severity)
                 {
-                    //send the message to the user
-                    var chatSystem = _manager.GetEntitySystem<ChatSystem>();
-
-                    //check if they have a entity
-                    _chat.ChatMessageToOne(ChatChannel.Server,
-                        rule.Message,
-                        rule.Message,
-                        EntityUid.Invalid,
-                        false,
-                        args.Sender.Channel);
+                    case AutoModSeverity.None:
+                        break;
+                    case AutoModSeverity.Warning:
+                        //send a warning to the user
+                        _chat.ChatMessageToOne(ChatChannel.Server,
+                            rule.Message,
+                            rule.Message,
+                            EntityUid.Invalid,
+                            false,
+                            args.Sender.Channel);
+                        break;
+                    case AutoModSeverity.Kick:
+                        //kick the user from the server
+                        _automodLog.Info($"Kicking user {args.Sender} for rule: {rule.Regex}");
+                        //_player.Kick(args.Sender, rule.Message);
+                        break;
+                    case AutoModSeverity.Ban:
+                        //ban the user from the server
+                        _automodLog.Info($"Banning user {args.Sender} for rule: {rule.Regex}");
+                        //_player.Ban(args.Sender, rule.Message);
+                        break;
                 }
             }
         }
