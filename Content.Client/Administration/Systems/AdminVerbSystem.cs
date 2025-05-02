@@ -57,6 +57,10 @@ namespace Content.Client.Administration.Systems
 
             if (_admin.HasAdminFlag(args.User, AdminFlags.Admin))
                 args.ExtraCategories.Add(VerbCategory.Tricks);
+
+            //starlight
+            if (_admin.HasAdminFlag(args.User, AdminFlags.Admin))
+                args.ExtraCategories.Add(VerbCategory.Polymorphs);
         }
     }
 }

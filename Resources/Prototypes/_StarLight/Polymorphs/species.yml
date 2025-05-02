@@ -1,0 +1,119 @@
+- type: polymorph
+  id: AdminSlimePersonSpeciesSet
+  configuration:
+    entity: MobSlimePerson
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminHumanSpeciesSet
+  configuration:
+    entity: MobHuman
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminDionaSpeciesSet
+  configuration:
+    entity: MobDiona
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminResomiSpeciesSet
+  configuration:
+    entity: MobResomi
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminFelionoidSpeciesSet
+  configuration:
+    entity: MobFelionoid
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminMothSpeciesSet
+  configuration:
+    entity: MobMoth
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminReptilianSpeciesSet
+  configuration:
+    entity: MobReptilian
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminVoxSpeciesSet
+  configuration:
+    entity: MobVox
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminArachnidSpeciesSet
+  configuration:
+    entity: MobArachnid
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminVulpkaninSpeciesSet
+  configuration:
+    entity: MobVulpkanin
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminDwarfSpeciesSet
+  configuration:
+    entity: MobDwarf
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true
+
+- type: polymorph
+  id: AdminCycloriteSpeciesSet
+  configuration:
+    entity: MobCyclorite
+    forced: true
+    transferName: true
+    transferHumanoidAppearance: true
+    inventory: Transfer
+    allowRepeatedMorphs: true

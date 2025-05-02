@@ -66,6 +66,11 @@ namespace Content.Shared.Verbs
             new("verb-categories-smite", "/Textures/Interface/VerbIcons/boom.svg.192dpi.png", iconsOnly: true) { Columns = 6 };
         public static readonly VerbCategory Tricks =
             new("verb-categories-tricks", "/Textures/Interface/AdminActions/tricks.png", iconsOnly: true) { Columns = 5 };
+        
+        //starlight start
+        public static readonly VerbCategory Polymorphs =
+            new("verb-categories-polymorphs", "/Textures/Interface/AdminActions/tricks.png", iconsOnly: true) { Columns = 5 };
+        //starlight end
 
         public static readonly VerbCategory SetTransferAmount =
             new("verb-categories-transfer", "/Textures/Interface/VerbIcons/spill.svg.192dpi.png");
