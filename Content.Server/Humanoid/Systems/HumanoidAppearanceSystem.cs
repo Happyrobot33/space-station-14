@@ -4,6 +4,7 @@ using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences;
 using Content.Shared.Verbs;
 using Robust.Shared.GameObjects.Components.Localization;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Humanoid;
 
@@ -30,20 +31,31 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
     /// <param name="sourceHumanoid">Source entity's humanoid component.</param>
     /// <param name="targetHumanoid">Target entity's humanoid component.</param>
     public void CloneAppearance(EntityUid source, EntityUid target, HumanoidAppearanceComponent? sourceHumanoid = null,
-        HumanoidAppearanceComponent? targetHumanoid = null)
+        HumanoidAppearanceComponent? targetHumanoid = null, bool avoidMarkings = false)
     {
+        IPrototypeManager? prototypeManager = null;
+        IoCManager.Resolve(ref prototypeManager);
+        MarkingManager? markingManager = null;
+        IoCManager.Resolve(ref markingManager);
+
         if (!Resolve(source, ref sourceHumanoid) || !Resolve(target, ref targetHumanoid))
         {
             return;
         }
 
-        targetHumanoid.Species = sourceHumanoid.Species;
+        if (!avoidMarkings)
+        {
+            targetHumanoid.Species = sourceHumanoid.Species;
+        }
         targetHumanoid.SkinColor = sourceHumanoid.SkinColor;
         targetHumanoid.EyeColor = sourceHumanoid.EyeColor;
         targetHumanoid.Age = sourceHumanoid.Age;
         SetSex(target, sourceHumanoid.Sex, false, targetHumanoid);
-        targetHumanoid.CustomBaseLayers = new(sourceHumanoid.CustomBaseLayers);
-        targetHumanoid.MarkingSet = new(sourceHumanoid.MarkingSet);
+        if (!avoidMarkings)
+        {
+            targetHumanoid.CustomBaseLayers = new(sourceHumanoid.CustomBaseLayers);
+            targetHumanoid.MarkingSet = new(sourceHumanoid.MarkingSet);
+        }
 
         targetHumanoid.Gender = sourceHumanoid.Gender;
         if (TryComp<GrammarComponent>(target, out var grammar))
@@ -52,6 +64,21 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
         }
         if (sourceHumanoid.Voice != null)
             SetTTSVoice(target, sourceHumanoid.Voice, targetHumanoid);
+        
+        //ensure the colors are updated, and double check for invalid markings
+        //this doesnt work why????
+        foreach (var (category, list) in targetHumanoid.MarkingSet.Markings)
+        {
+            foreach (var marking in list)
+            {
+                if (markingManager.TryGetMarking(marking, out var prototype) &&
+                    markingManager.MustMatchSkin(targetHumanoid.Species, prototype.BodyPart, out var alpha, prototypeManager))
+                {
+                    marking.SetColor(targetHumanoid.SkinColor.WithAlpha(alpha));
+                }
+            }
+        }
+
         Dirty(target, targetHumanoid);
     }
 

@@ -1,9 +1,12 @@
 using Content.Server.Administration.Systems;
 using Content.Server.CharacterAppearance.Components;
+using Content.Server.Humanoid;
 using Content.Server.Polymorph.Systems;
 using Content.Shared.Administration;
 using Content.Shared.Administration.Managers;
 using Content.Shared.Database;
+using Content.Shared.Humanoid;
+using Content.Shared.Humanoid.Markings;
 using Content.Shared.Verbs;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map;
@@ -18,6 +21,8 @@ public sealed partial class AdminVerbSystem : EntitySystem
     [Dependency] private readonly ISharedAdminManager _adminManager = default!;
     [Dependency] private readonly IEntityManager _entities = default!;
     [Dependency] private readonly PolymorphSystem _polymorphSystem = default!;
+    [Dependency] private readonly MarkingManager _markingManager = default!;
+    [Dependency] private readonly HumanoidAppearanceSystem _humanoidAppearance = default!;
     public override void Initialize()
     {
         SubscribeLocalEvent<GetVerbsEvent<Verb>>(AddVerbs);
@@ -87,15 +92,6 @@ public sealed partial class AdminVerbSystem : EntitySystem
             Act = () =>
             {
                 _polymorphSystem.PolymorphEntity(args.Target, polymorphProto);
-
-                //remove any existing randomizer
-                _entities.RemoveComponent<RandomHumanoidAppearanceComponent>(args.Target);
-
-                //randomize their appearance. We dont use transferhumanoidappearance because it really messes up with markings and tails
-                var appearance = _entities.EnsureComponent<RandomHumanoidAppearanceComponent>(args.Target);
-
-                //keep the name
-                appearance.RandomizeName = false;
             },
             Impact = LogImpact.Medium,
             Message = $"Polymorphs the target into {speciesName}, transferring all items to the new body, as if they had started as that species.",
