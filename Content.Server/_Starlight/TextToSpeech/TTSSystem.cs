@@ -243,8 +243,8 @@ public sealed partial class TTSSystem : EntitySystem
         try
         {
             text = DecimalConverter().Replace(text, " point ");
-            text = Number2Word().Replace(text, ReplaceNumber2Word);
-            text = SymbolFilter().Replace(text, ReplaceAbbreviations);
+            text = NumberToWord().Replace(text, ReplaceNumberToWord);
+            text = CatchAllWordFilter().Replace(text, ReplaceAbbreviations);
             text = CharFilter().Replace(text.Trim(), "");
 
             if (text == "") return null;
@@ -264,7 +264,7 @@ public sealed partial class TTSSystem : EntitySystem
 
         return null;
     }
-    private string ReplaceNumber2Word(Match word)
+    private string ReplaceNumberToWord(Match word)
         => !long.TryParse(word.Value, out var number) ? word.Value : NumberConverter.NumberToText(number);
     private string ReplaceAbbreviations(Match word)
         => _wordReplacement.TryGetValue(word.Value.ToLower(), out var replace) ? replace : word.Value;
@@ -280,7 +280,7 @@ public sealed partial class TTSSystem : EntitySystem
             {"(•`ω´•)", "meow"},
             {";;w;;", "meow"},
             {"owo", "meow"},
-            {"UwU", "meow"},
+            {"uwu", "meow"},
             {">w<", "meow"},
             {"^w^", "meow"},
 
@@ -308,8 +308,8 @@ public sealed partial class TTSSystem : EntitySystem
     private static partial Regex DecimalConverter();
 
     [GeneratedRegex(@"\d+")]
-    private static partial Regex Number2Word();
+    private static partial Regex NumberToWord();
 
-    [GeneratedRegex(@"(?<![a-zA-Zа-яёА-ЯЁ0-9])([a-zA-Zа-яёА-ЯЁ]+|(\(•`ω´•\)|;;w;;|owo|UwU|>w<|\^w\^))(?![a-zA-Zа-яёА-ЯЁ0-9])", RegexOptions.IgnoreCase | RegexOptions.Multiline, "en-US")]
-    private static partial Regex SymbolFilter();
+    [GeneratedRegex(@"\S+", RegexOptions.IgnoreCase | RegexOptions.Multiline, "en-US")]
+    private static partial Regex CatchAllWordFilter();
 }
