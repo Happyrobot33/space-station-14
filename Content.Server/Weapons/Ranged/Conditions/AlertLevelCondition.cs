@@ -5,6 +5,7 @@ using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Set;
 using Robust.Shared.Serialization;
+using Robust.Shared.Map;
 
 namespace Content.Server.Weapons.Ranged.Conditions;
 
@@ -22,11 +23,24 @@ public sealed partial class AlertLevelCondition : FireModeCondition
         if (!entityManager.TryGetComponent<TransformComponent>(args.Shooter, out var transformComp))
             return false;
 
-        if (entityManager.TryGetComponent<StationMemberComponent>(transformComp.ParentUid, out var stationMember) &&
-            entityManager.TryGetComponent<AlertLevelComponent>(stationMember.Station, out var alertLevelComp))
+        IMapManager _mapManager = default!;
+        IoCManager.Resolve<IMapManager>(ref _mapManager);
+
+        //get all grids on the map the entity is on
+        var grids = _mapManager.GetAllGrids(transformComp.MapID);
+
+        foreach (var grid in grids)
         {
-            var currentAlertLevel = alertSystem.GetLevel(stationMember.Station, alertLevelComp);
-            return AlertLevels.Contains(currentAlertLevel);
+            if (entityManager.TryGetComponent<StationMemberComponent>(grid, out var stationMember) &&
+                entityManager.TryGetComponent<AlertLevelComponent>(stationMember.Station, out var alertLevelComp))
+            {
+                var currentAlertLevel = alertSystem.GetLevel(stationMember.Station, alertLevelComp);
+                if (AlertLevels.Contains(currentAlertLevel))
+                {
+                    return true; //return early
+                }
+                //return AlertLevels.Contains(currentAlertLevel);
+            }
         }
 
         return false;
