@@ -23,6 +23,7 @@ public sealed partial class AlertLevelCondition : FireModeCondition
         if (!entityManager.TryGetComponent<TransformComponent>(args.Shooter, out var transformComp))
             return false;
 
+        //starlight start
         IMapManager _mapManager = default!;
         IoCManager.Resolve<IMapManager>(ref _mapManager);
 
@@ -42,6 +43,8 @@ public sealed partial class AlertLevelCondition : FireModeCondition
                 //return AlertLevels.Contains(currentAlertLevel);
             }
         }
+
+        //starlight end
 
         return false;
     }
