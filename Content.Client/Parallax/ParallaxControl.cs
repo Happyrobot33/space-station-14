@@ -23,21 +23,30 @@ public sealed class ParallaxControl : Control
     {
         IoCManager.InjectDependencies(this);
 
-        Offset = new Vector2(_random.Next(0, 1000), _random.Next(0, 1000));
+        //Offset = new Vector2(_random.Next(0, 1000), _random.Next(0, 1000));
         RectClipContent = true;
-        _parallaxManager.LoadParallaxByName("FastSpace");
+        _parallaxManager.LoadParallaxByName("Default");
     }
 
     protected override void Draw(DrawingHandleScreen handle)
     {
-        foreach (var layer in _parallaxManager.GetParallaxLayers("FastSpace"))
+        foreach (var layer in _parallaxManager.GetParallaxLayers("Default"))
         {
             var tex = layer.Texture;
-            var texSize = (tex.Size.X * (int) Size.X, tex.Size.Y * (int) Size.X) * layer.Config.Scale.Floored() / 1920;
+            Vector2 texSizeTemp = new Vector2(
+                (float)tex.Size.X * Size.X,
+                (float)tex.Size.Y * Size.X);
+            texSizeTemp *= layer.Config.Scale / 1080f;
+
+            Vector2i texSize = new Vector2i(
+                (int)texSizeTemp.X,
+                (int)texSizeTemp.Y);
+
             var ourSize = PixelSize;
 
-            var currentTime = (float) _timing.RealTime.TotalSeconds;
-            var offset = Offset + new Vector2(currentTime * 100f, currentTime * 0f);
+            //var currentTime = (float)_timing.RealTime.TotalSeconds;
+            //var offset = Offset + new Vector2(currentTime * 100f, currentTime * 0f);
+            var offset = Vector2.Zero;
 
             if (layer.Config.Tiled)
             {
