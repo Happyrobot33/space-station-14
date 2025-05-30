@@ -109,6 +109,8 @@
     - type: Icon
       sprite: _Starlight/Mobs/Species/Cyclorite/parts.rsi
       state: "l_leg"
+    - type: MovementBodyPart
+      sprintSpeed : 3.825
 
 - type: entity
   id: RightLegCyclorite
@@ -121,6 +123,8 @@
     - type: Icon
       sprite: _Starlight/Mobs/Species/Cyclorite/parts.rsi
       state: "r_leg"
+    - type: MovementBodyPart
+      sprintSpeed : 3.825
 
 - type: entity
   id: LeftFootCyclorite
