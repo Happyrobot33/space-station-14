@@ -2,6 +2,8 @@
 loadout-group-roboticist-head = Roboticist head
 loadout-group-roboticist-jumpsuit = Roboticist jumpsuit
 loadout-group-roboticist-outerclothing = Roboticist outer clothing
+loadout-group-roboticist-gloves = Roboticist gloves
+loadout-group-roboticist-goggles = Roboticist eyewear
 loadout-group-roboticist-backpack = Roboticist backpack
 
 # Command
@@ -17,3 +19,6 @@ loadout-group-blueshield-eyewear = Blueshield eyewear
 # Security
 
 loadout-group-brigmedic-gloves = Brigmedic gloves
+loadout-group-security-non-lethal-weapon = Security Non-Lethal Weapon
+loadout-group-security-sidearm = Security Sidearm
+

@@ -7,7 +7,7 @@
     - type: MachineBoard
       prototype: PrinterDoc
       stackRequirements:
-        MatterBin: 3
+        Steel: 3
         Manipulator: 1
         Glass: 1
         
@@ -21,9 +21,25 @@
     - type: MachineBoard
       prototype: KitchenOven
       stackRequirements:
-        Capacitor: 4
+        Steel: 4
         Glass: 2
         Cable: 10
     - type: Tag
       tags:
       - OvenMachineBoard
+      
+- type: entity
+  id: StoveMachineCircuitboard
+  parent: BaseMachineCircuitboard
+  name: stove machine board
+  components:
+    - type: Sprite
+      state: service
+    - type: MachineBoard
+      prototype: KitchenStove
+      stackRequirements:
+        Steel: 1
+        Cable: 5
+    - type: Tag
+      tags:
+      - StoveMachineBoard
