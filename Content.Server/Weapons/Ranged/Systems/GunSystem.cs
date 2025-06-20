@@ -143,6 +143,9 @@ public sealed partial class GunSystem : SharedGunSystem
         // DebugTools.Assert(direction != Vector2.Zero);
         var shotProjectiles = new List<EntityUid>(ammo.Count);
 
+        //starlight, sound list to play after all logic
+        var soundList = new List<SoundSpecifier>();
+
         foreach (var (ent, shootable) in ammo)
         {
             // pneumatic cannon doesn't shoot bullets it just throws them, ignore ammo handling
@@ -195,7 +198,12 @@ public sealed partial class GunSystem : SharedGunSystem
                     else
                     {
                         userImpulse = false;
-                        Audio.PlayPredicted(gun.SoundEmpty, gunUid, user);
+                        //starlight, que sound
+                        if (gun.SoundEmpty != null)
+                        {
+                            soundList.Add(gun.SoundEmpty);
+                        }
+                        //Audio.PlayPredicted(gun.SoundEmpty, gunUid, user);
                     }
 
                     // Something like ballistic might want to leave it in the container still
@@ -224,7 +232,12 @@ public sealed partial class GunSystem : SharedGunSystem
                     else
                     {
                         userImpulse = false;
-                        Audio.PlayPredicted(gun.SoundEmpty, gunUid, user);
+                        //starlight, que sound
+                        if (gun.SoundEmpty != null)
+                        {
+                            soundList.Add(gun.SoundEmpty);
+                        }
+                        //Audio.PlayPredicted(gun.SoundEmpty, gunUid, user);
                     }
 
                     // Something like ballistic might want to leave it in the container still
@@ -370,10 +383,25 @@ public sealed partial class GunSystem : SharedGunSystem
 
                     FireEffects([effects], hitscan);
 
-                    Audio.PlayPredicted(gun.SoundGunshotModified, gunUid, user);
+                    //starlight, que sound
+                    if (gun.SoundGunshotModified != null)
+                    {
+                        soundList.Add(gun.SoundGunshotModified);
+                    }
+                    //Audio.PlayPredicted(gun.SoundGunshotModified, gunUid, user);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            //starlight, play one of each sound
+            soundList = soundList.Distinct().ToList();
+            foreach (var sound in soundList)
+            {
+                if (sound != null)
+                {
+                    Audio.PlayPredicted(sound, gunUid, user);
+                }
             }
         }
 
