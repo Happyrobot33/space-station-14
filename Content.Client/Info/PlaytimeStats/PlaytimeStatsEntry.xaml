@@ -4,8 +4,12 @@
     <BoxContainer Orientation="Horizontal"
                   HorizontalExpand="True"
                   SeparationOverride="4">
+       <TextureRect Name="IconLabel"
+              SizeFlagsStretchRatio="0.3"
+              HorizontalExpand="True"
+              VerticalExpand="True"/>
         <Label Name="RoleLabel"
-               SizeFlagsStretchRatio="3"
+               SizeFlagsStretchRatio="2.7"
                HorizontalExpand="True"
                ClipText="True"
                Margin="5,5,5,5"/>
