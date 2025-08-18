@@ -86,19 +86,6 @@
     job: BlueShield
 
 - type: entity
-  parent: [ IDCardStandard, BaseCommandContraband ]
-  id: NTNCBlueShieldIDCard
-  name: Nanotrasen Navy Corps Marine's ID card
-  components:
-  - type: Sprite
-    sprite: _Starlight/Objects/Misc/id_cards.rsi
-    layers:
-    - state: gold
-    - state: idblueshield
-  - type: PresetIdCard
-    job: NTNCBlueshield
-
-- type: entity
   parent: [ IDCardStandard, BaseCargoContraband ]
   id: MiningIDCard
   name: mining ID card
