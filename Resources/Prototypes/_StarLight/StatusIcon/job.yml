@@ -24,14 +24,6 @@
 
 - type: jobIcon
   parent: JobIcon
-  id: JobIconNTNCBlueShield
-  icon:
-    sprite: /Textures/_Starlight/Interface/Misc/job_icons.rsi
-    state: NTNCBlueShield
-  jobName: job-name-ntncblueshield
-
-- type: jobIcon
-  parent: JobIcon
   id: JobIconSurgeon
   icon:
     sprite: /Textures/_Starlight/Interface/Misc/job_icons.rsi
