@@ -32,6 +32,16 @@ namespace Content.Server.Database.Migrations.Postgres
                         principalColumn: "profile_id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            //get the old flavor text
+            migrationBuilder.Sql(@"
+UPDATE sl_character_info 
+    SET physical_desc = (
+        SELECT flavor_text
+        FROM profile
+        WHERE sl_character_info.profile_id = profile.profile_id
+    );
+");
         }
 
         /// <inheritdoc />

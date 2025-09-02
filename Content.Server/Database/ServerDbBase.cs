@@ -290,10 +290,6 @@ namespace Content.Server.Database
             if (profile.CharacterInfo != null)
             {
                 physicalDesc = profile.CharacterInfo.PhysicalDesc;
-                if (physicalDesc == string.Empty)
-                {
-                    physicalDesc = profile.FlavorText;
-                }
                 personalityDesc = profile.CharacterInfo.PersonalityDesc;
                 personalNotes = profile.CharacterInfo.PersonalNotes;
                 oocNotes = profile.CharacterInfo.OOCNotes;
