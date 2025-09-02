@@ -33,15 +33,36 @@ namespace Content.Server.Database.Migrations.Postgres
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            //get the old flavor text
-            migrationBuilder.Sql(@"
-UPDATE sl_character_info 
-    SET physical_desc = (
-        SELECT flavor_text
-        FROM profile
-        WHERE sl_character_info.profile_id = profile.profile_id
-    );
-");
+            string sql =
+            """
+                UPDATE sl_character_info 
+                SET physical_desc = (
+                    SELECT flavor_text
+                    FROM profile
+                    WHERE sl_character_info.profile_id = profile.profile_id
+                );
+
+                INSERT INTO sl_character_info (
+                    "profile_id",
+                    "physical_desc",
+                    "personality_desc",
+                    "personal_notes",
+                    "character_secrets",
+                    "exploitable_info",
+                    "oocnotes")
+                SELECT
+                    profile_id,
+                    flavor_text,
+                    "" AS personality_desc,
+                    "" AS personal_notes,
+                    "" AS character_secrets,
+                    "" AS exploitable_info,
+                    "" AS oocnotes
+                FROM profile
+                WHERE profile_id NOT IN (SELECT profile_id FROM sl_character_info)
+                AND flavor_text IS NOT "";
+                """;
+            migrationBuilder.Sql(sql);
         }
 
         /// <inheritdoc />
