@@ -1,0 +1,13 @@
+- type: entity
+  id: TunnelVision
+  name: TunnelVision
+  description: You focus your vision into a tunnel, limiting your field of view.
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Action
+    itemIconStyle: NoItem
+    icon:
+      sprite: _Starlight/Actions/resomi.rsi
+      state: jump
+  - type: InstantAction
+    event: !type:TunnelVisionEvent {}
