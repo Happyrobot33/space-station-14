@@ -12,11 +12,12 @@ using Robust.Shared.Timing;
 using Content.Shared.Stunnable;
 using Content.Shared.Charges.Components;
 using Content.Shared.Charges.Systems;
+using Content.Shared.Movement.Components;
+using Robust.Shared.Network;
 
 namespace Content.Shared._Starlight.Actions.EntitySystems;
 
-//idea taked from VigersRay
-public sealed class TunnelVisionSystem : EntitySystem
+public abstract class SharedTunnelVisionSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _action = default!;
     [Dependency] private readonly ThrowingSystem _throwing = default!;
@@ -27,6 +28,8 @@ public sealed class TunnelVisionSystem : EntitySystem
     [Dependency] private readonly SharedStunSystem _stun = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SharedChargesSystem _chargesSystem = default!;
+    [Dependency] private readonly INetManager _net = default!;
+    [Dependency] private readonly IEntityManager _entMan = default!;
 
     public override void Initialize()
     {
@@ -37,28 +40,45 @@ public sealed class TunnelVisionSystem : EntitySystem
         SubscribeLocalEvent<TunnelVisionComponent, ToggleTunnelVisionEvent>(OnTunnelVisionToggle);
     }
 
-    private void OnStartup(EntityUid uid, TunnelVisionComponent component, MapInitEvent args)
+    public void OnStartup(Entity<TunnelVisionComponent> ent, ref MapInitEvent args)
     {
-        _action.AddAction(uid, ref component.ActionEntity, component.Action);
+        _action.AddAction(ent, ref ent.Comp.ActionEntity, ent.Comp.Action);
 
-        Dirty(uid, component);
+        Dirty(ent, ent.Comp);
     }
 
-    private void OnShutdown(EntityUid uid, TunnelVisionComponent component, ComponentShutdown args)
+    public void OnShutdown(Entity<TunnelVisionComponent> ent, ref ComponentShutdown args)
     {
-        if (Deleted(uid) || component.ActionEntity is null)
+        if (Deleted(ent) || ent.Comp.ActionEntity is null)
             return;
 
-        _action.RemoveAction((uid, null), component.ActionEntity);
+        _action.RemoveAction((ent, null), ent.Comp.ActionEntity);
     }
 
-    private void OnTunnelVisionToggle(EntityUid uid, TunnelVisionComponent comp, ToggleTunnelVisionEvent args)
+    public virtual void OnTunnelVisionToggle(EntityUid uid, TunnelVisionComponent comp, ToggleTunnelVisionEvent args)
     {
-        if (args.Handled)
-            return;
+        comp.Active = !comp.Active;
+        Dirty(uid, comp);
 
-        args.Handled = true;
+        //this is semi fucked and causes jitter when it happens initially. idfk good enough for now
 
-        comp.IsActive = !comp.IsActive;
+        if (comp.Active)
+        {
+            //add the eyecursoroffset component to the entity
+            var eyeoffset = AddComp<EyeCursorOffsetComponent>(uid);
+
+            //set it up
+            eyeoffset.MaxOffset = comp.MaxOffset;
+            eyeoffset.OffsetSpeed = comp.OffsetSpeed;
+            eyeoffset.PvsIncrease = comp.PvsIncrease;
+
+            //dirty it
+            Dirty(uid, eyeoffset);
+        }
+        else
+        {
+            //remove the eyecursoroffset component from the entity
+            RemComp<EyeCursorOffsetComponent>(uid);
+        }
     }
 }

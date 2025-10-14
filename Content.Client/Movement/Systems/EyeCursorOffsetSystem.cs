@@ -1,7 +1,7 @@
 using System.Numerics;
-using Content.Client.Movement.Components;
 using Content.Client.Viewport;
 using Content.Shared.Camera;
+using Content.Shared.Movement.Components;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Shared.Map;

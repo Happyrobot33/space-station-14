@@ -15,6 +15,15 @@
     BlueTintIntensity: 0.6
 
 - type: shader
+  id: TunnelVisionShader
+  kind: source
+  path: "/Textures/_Starlight/Shaders/tunnelvision.swsl"
+#  params:
+#    NightVisionBoost: 2.0
+#    NightVisionThreshold: 0.3
+#    BlueTintIntensity: 0.6
+
+- type: shader
   id: ThermalVisionScreenShader
   kind: source
   path: "/Textures/_Starlight/Shaders/thermal-screen.swsl"

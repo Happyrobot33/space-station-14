@@ -1,0 +1,44 @@
+uniform sampler2D SCREEN_TEXTURE;
+
+const highp vec4 darkAreaColor = vec4(0, 0, 0, 0.99);
+
+const highp float fov = 0.5;
+
+highp vec2 rot(highp vec2 v, highp float angle)
+{
+    highp float s = sin(angle);
+    highp float c = cos(angle);
+
+    highp mat2 m = mat2(c, -s, s, c);
+    return m * v;
+}
+
+void fragment()
+{
+    COLOR = zTextureSpec(SCREEN_TEXTURE, Pos);
+
+    //cut UV in half
+    highp vec2 uv = Pos;
+    //rotate the uv
+    uv.x *= 2.0;
+    //shift over
+    uv.x -= 1;
+    uv.y -= 0.5;
+    uv = rot(uv, TIME);
+
+    highp float lerppos = mix(0.0, 1.0, uv.y * fov);
+
+    highp float intensity = 0;
+
+    if (uv.x > lerppos)
+    {
+        intensity = 1.0;
+    }
+
+    if (uv.x < -lerppos)
+    {
+        intensity = 1.0;
+    }
+
+    COLOR.rgb = mix(COLOR.rgb, darkAreaColor.rgb, intensity * darkAreaColor.a);
+}
