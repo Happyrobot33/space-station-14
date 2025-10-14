@@ -232,8 +232,8 @@ varying highp vec4 VtxModulate;
 // TODO CLYDE consistent shader variable naming
 uniform sampler2D lightMap;
 
-const ARRAY_HIGHP vec4 darkAreaColor =  vec4 ( 0 , 0 , 0 , 0.8 );
-const ARRAY_HIGHP float fov =  0.5;
+const ARRAY_HIGHP vec4 darkAreaColor =  vec4 ( 0 , 0 , 0 , 0.99 );
+const ARRAY_HIGHP float fov =  30;
 uniform sampler2D SCREEN_TEXTURE;
 
 
@@ -281,17 +281,8 @@ void main()
      COLOR = zTextureSpec ( SCREEN_TEXTURE , Pos ) ;
  highp vec2 uv = Pos ;
  uv . x *= 2.0 ;
- uv . x -= 1 ;
- uv . y -= 0.5 ;
- uv = rot ( uv , 0 ) ;
- highp float lerppos = mix ( 0.0 , 1.0 , uv . y * fov ) ;
- highp intensity = 0 ;
- if ( uv . x > lerppos ) {
- intensity = 1.0 ;
- }
- if ( uv . x < - lerppos ) {
- intensity = 1.0 ;
- }
+ highp float intensity = ( uv . x - 0.5 ) ^ 2 * fov * 1 / uv . y ;
+ COLOR . rgb = mix ( COLOR . rgb , darkAreaColor . rgb , intensity * darkAreaColor . a ) ;
 
 
     LIGHT.xyz = lightSample;

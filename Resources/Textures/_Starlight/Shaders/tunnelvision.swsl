@@ -2,7 +2,7 @@ uniform sampler2D SCREEN_TEXTURE;
 
 const highp vec4 darkAreaColor = vec4(0, 0, 0, 0.99);
 
-const highp float fov = 0.5;
+const highp float fov = 30;
 
 highp vec2 rot(highp vec2 v, highp float angle)
 {
@@ -20,25 +20,20 @@ void fragment()
     //cut UV in half
     highp vec2 uv = Pos;
     //rotate the uv
-    uv.x *= 2.0;
     //shift over
-    uv.x -= 1;
+    uv.x -= 0.5;
     uv.y -= 0.5;
     uv = rot(uv, TIME);
 
-    highp float lerppos = mix(0.0, 1.0, uv.y * fov);
+    //centered sine wave with funny scaling?
+    highp float intensity = pow(uv.x, 2) * fov * 1/uv.y;
 
-    highp float intensity = 0;
-
-    if (uv.x > lerppos)
-    {
+    //if uv.y negative, set intensity to 1
+    if (uv.y < 0.0)
         intensity = 1.0;
-    }
 
-    if (uv.x < -lerppos)
-    {
-        intensity = 1.0;
-    }
+    //clamp intensity between 0 and 1
+    intensity = clamp(intensity, 0.0, 1.0);
 
     COLOR.rgb = mix(COLOR.rgb, darkAreaColor.rgb, intensity * darkAreaColor.a);
 }
