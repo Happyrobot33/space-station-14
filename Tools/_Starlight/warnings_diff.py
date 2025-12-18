@@ -43,19 +43,26 @@ def runBuild():
     return summatedLines
 
 def switchBranch(branchName):
+    print(f"Switching to {branchName} branch...")
     subprocess.check_output(['git', 'checkout', branchName], universal_newlines=True)
 
+def getCurrentBranch():
+    branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], universal_newlines=True)
+    return branch.strip()
+
 def __main__():
+    #get current branch name
+    originalBranch = getCurrentBranch()
+    print(f"Saved original branch: {originalBranch}")
+
     print("Running builds...")
-    print("Switching to stable branch...")
     switchBranch('stable')
     sleep(2)  # wait for branch switch to complete
-    print("Running stable build...")
+    print("Running build...")
     stablelines = runBuild()
-    print("Switching to starlight-dev branch...")
-    switchBranch('starlight-dev')
+    switchBranch(originalBranch)
     sleep(2)  # wait for branch switch to complete
-    print("Running starlight-dev build...")
+    print("Running build...")
     devlines = runBuild()
 
     print("Comparing results...")
