@@ -9,8 +9,6 @@ using Robust.Shared.Audio.Components;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
-using Robust.Shared.Prototypes;
-using Robust.Shared.Random;
 
 namespace Content.Client._Starlight.TTS;
 
@@ -22,9 +20,7 @@ public sealed class TextToSpeechSystem : EntitySystem
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly SharedAudioSystem _sharedAudio = default!;
-    [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IAudioManager _audioManager = default!;
-    [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly RadioChimeSystem _chime = default!;
 
     private readonly ConcurrentQueue<(byte[] file, SoundSpecifier? specifier, float volume)> _ttsQueue = [];
@@ -83,7 +79,7 @@ public sealed class TextToSpeechSystem : EntitySystem
     private void OnAnnounceTTSPlay(AnnounceTtsEvent ev)
         => _ttsQueue.Enqueue((ev.Data, ev.AnnouncementSound, _announceVolume));
 
-    private void OnClientTTSAudioRemove<T>(Entity<ClientTTSAudioComponent> ent, ref T args)
+    private static void OnClientTTSAudioRemove<T>(Entity<ClientTTSAudioComponent> ent, ref T args)
     {
         if (ent.Comp.Stream is not { } stream)
             return;
