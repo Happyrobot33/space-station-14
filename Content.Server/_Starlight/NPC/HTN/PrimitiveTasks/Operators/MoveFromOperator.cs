@@ -27,43 +27,43 @@ public sealed partial class MoveFromOperator : HTNOperator, IHtnConditionalShutd
     /// <summary>
     /// When to shut the task down.
     /// </summary>
-    [DataField("shutdownState")]
+    [DataField]
     public HTNPlanState ShutdownState { get; private set; } = HTNPlanState.TaskFinished;
 
     /// <summary>
     /// Should we assume the MovementTarget is reachable during planning or should we pathfind to it?
     /// </summary>
-    [DataField("pathfindInPlanning")]
+    [DataField]
     public bool PathfindInPlanning = true;
 
     /// <summary>
     /// When we're finished moving to the target should we remove its key?
     /// </summary>
-    [DataField("removeKeyOnFinish")]
+    [DataField]
     public bool RemoveKeyOnFinish = true;
 
     /// <summary>
     /// Target Coordinates to move to. This gets removed after execution.
     /// </summary>
-    [DataField("targetKey")]
+    [DataField]
     public string TargetKey = "TargetCoordinates";
 
     /// <summary>
     /// Where the pathfinding result will be stored (if applicable). This gets removed after execution.
     /// </summary>
-    [DataField("pathfindKey")]
+    [DataField]
     public string PathfindKey = NPCBlackboard.PathfindKey;
 
     /// <summary>
     /// How close we need to get before considering movement finished.
     /// </summary>
-    [DataField("rangeKey")]
+    [DataField]
     public string RangeKey = "MovementRange";
 
     /// <summary>
     /// Do we only need to move into line of sight.
     /// </summary>
-    [DataField("stopOnLineOfSight")]
+    [DataField]
     public bool StopOnLineOfSight;
 
     [DataField]

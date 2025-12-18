@@ -1,16 +1,12 @@
 using System.Numerics;
 using Content.Shared._Starlight.Combat.Effects.Components;
 using Content.Shared.Armor;
-using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Inventory;
 using Content.Shared.Materials;
-using Content.Shared.Silicons.Borgs;
-using Content.Shared.Weapons.Ranged;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
 using Robust.Shared.Random;
-using Robust.Shared.Timing;
 
 namespace Content.Shared._Starlight.Combat.Effects.EntitySystems;
 
@@ -22,7 +18,6 @@ public abstract class SharedArmorSparkEffectSystem : EntitySystem
 {
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     public override void Initialize()
     {
@@ -53,13 +48,13 @@ public abstract class SharedArmorSparkEffectSystem : EntitySystem
         SpawnSparkEffect(uid, component, args.Args.TargetSlots);
     }
 
-    private bool IsHitscanDamage(DamageModifyEvent args)
+    private static bool IsHitscanDamage(DamageModifyEvent args)
     {
         // Check if the damage contains piercing damage (typical for bullets)
         return args.Damage.DamageDict.ContainsKey("Piercing") && args.Damage.DamageDict["Piercing"] > 0;
     }
 
-    private bool IsSPOrHPBullet(DamageModifyEvent args)
+    private static bool IsSPOrHPBullet(DamageModifyEvent args)
     {
         // SP bullets have negative armor penetration (-0.25 to -1)
         // HP bullets have very negative armor penetration (-1)
