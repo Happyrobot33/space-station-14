@@ -32,16 +32,10 @@ public abstract class SharedTemperatureSystem : EntitySystem
     }
 
     // Starlight begin
-
     private void OnInteractionSuccess(Entity<TemperatureComponent> ent, ref InteractionSuccessEvent args)
     {
-        // Const
-        var joulesTransferPerDegree = 800.0f;
-
         if (!TryComp<TemperatureComponent>(args.User, out var userTempComp))
             return;
-
-        // This is not realistic whatsoever. A "realistic" hug (not really but a lot closer) would be more like ~250 J total for a dT of 50.
 
         Entity<TemperatureComponent> hotEntity;
         Entity<TemperatureComponent> coldEntity;
@@ -59,12 +53,20 @@ public abstract class SharedTemperatureSystem : EntitySystem
             coldEntity = ent;
         }
 
-        var joulesTransferred = joulesTransferPerDegree * Math.Abs(deltaT);
+        //Arbitrary conductivity value for hugs. This is the unrealistic part of this equation.
+        //lower this value to make hugs transfer less heat per interaction, raise it to make hugs transfer more heat.
+        //making this based on fixture size in the future might be interesting but its not really needed
+        const float ThermalConductivity = 0.1f;
 
-        ChangeHeat(hotEntity, -joulesTransferred, false, hotEntity.Comp);
-        ChangeHeat(coldEntity, joulesTransferred, false, coldEntity.Comp);
+        //Q = m*c*dT
+        var joulesTransferredToHot = GetHeatCapacity(hotEntity) * Math.Abs(deltaT) * ThermalConductivity;
+        var joulesTransferredToCold = GetHeatCapacity(coldEntity) * Math.Abs(deltaT) * ThermalConductivity;
+
+        //Log.Info($"Hug transfer: dT={deltaT}, J_hot={joulesTransferredToHot}, J_cold={joulesTransferredToCold}");
+
+        ChangeHeat(hotEntity, -joulesTransferredToHot, false, hotEntity.Comp);
+        ChangeHeat(coldEntity, joulesTransferredToCold, false, coldEntity.Comp);
     }
-
     // Starlight end
     
     private void OnTemperatureChanged(Entity<TemperatureSpeedComponent> ent, ref OnTemperatureChangeEvent args)
