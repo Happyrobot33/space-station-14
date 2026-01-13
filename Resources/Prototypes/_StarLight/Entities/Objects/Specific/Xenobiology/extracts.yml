@@ -935,4 +935,4 @@
         offset: 0.2
       scalingFactor: 1
       scalingOffset: 0
-  shouldDelete: true
+  shouldDelete: true 
